@@ -8,6 +8,17 @@ class LogTile extends StatelessWidget {
   /// {@macro log_tile}
   const LogTile({required this.log, super.key});
 
+  /// Skeleton of the tile.
+  static Widget skeleton = SizedBox(
+    height: height,
+    child: Material(
+      color: Colors.grey.withOpacity(.5),
+      child: const Center(
+        child: CircularProgressIndicator(),
+      ),
+    ),
+  );
+
   /// Height of the tile.
   static const double height = 56;
 

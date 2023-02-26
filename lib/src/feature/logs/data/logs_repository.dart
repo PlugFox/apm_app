@@ -1,15 +1,16 @@
 import 'package:entity/entity.dart';
 
-import '../model/log_filter.dart';
+import '../model/logs_chunk.dart';
+import '../model/logs_filter.dart';
 import 'logs_local_data_provider.dart';
 
 abstract class ILogsRepository {
   /// Fetch logs
-  Future<List<Log>> fetch({
+  Future<LogsChunk> fetch({
     LogID? from,
     LogID? to,
     int? count,
-    LogFilter? filter,
+    LogsFilter? filter,
   });
 }
 
@@ -19,16 +20,16 @@ class LogsRepositoryImpl implements ILogsRepository {
   final ILogsLocalDataProvider _localDataProvider;
 
   @override
-  Future<List<Log>> fetch({
+  Future<LogsChunk> fetch({
     LogID? from,
     LogID? to,
     int? count,
-    LogFilter? filter,
+    LogsFilter? filter,
   }) =>
       _localDataProvider.fetch(
         from: from,
         to: to,
-        count: count,
+        count: count ?? 1000,
         filter: filter,
       );
 }

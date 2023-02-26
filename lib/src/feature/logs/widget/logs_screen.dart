@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:entity/entity.dart';
 import 'package:flutter/material.dart';
 
+import '../../../common/controller/change_notifier_selector.dart';
+import '../controller/logs_controller.dart';
 import 'log_tile.dart';
+import 'logs_scope.dart';
 
 /// {@template logs_screen}
 /// LogsScreen widget.
@@ -12,24 +17,7 @@ class LogsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: CustomScrollView(
-          slivers: <Widget>[
-            const SliverAppBar(
-              title: Text('Home'),
-              pinned: true,
-              floating: true,
-              snap: true,
-            ),
-            // TODO: Add pinned list
-            SliverFixedExtentList(
-              itemExtent: LogTile.height,
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => LogTile(log: Log.placeholder()),
-                childCount: 10000,
-              ),
-            ),
-          ],
-        ),
+        body: const _LogsList(),
         bottomNavigationBar: SizedBox(
           height: 48,
           child: Material(
@@ -50,4 +38,56 @@ class LogsScreen extends StatelessWidget {
           ),
         ),
       );
+}
+
+class _LogsList extends StatefulWidget {
+  const _LogsList();
+
+  @override
+  State<_LogsList> createState() => _LogsListState();
+}
+
+class _LogsListState extends State<_LogsList> {
+  late final ILogsController controller;
+
+  @override
+  void initState() {
+    controller = LogsScope.controllerOf(context);
+    scheduleMicrotask(controller.paginate);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) => ValueListenableBuilder<bool>(
+      valueListenable: controller.select((controller) => controller.isProcessing, (prev, next) => prev != next),
+      builder: (context, isProcessing, child) => CustomScrollView(
+            slivers: <Widget>[
+              const SliverAppBar(
+                title: Text('Logs'),
+                pinned: true,
+                floating: true,
+                snap: true,
+              ),
+
+              // TODO: Add pinned list
+
+              SliverFixedExtentList(
+                itemExtent: LogTile.height,
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => LogTile(log: Log.placeholder()),
+                  childCount: 10,
+                ),
+              ),
+
+              /// Proccessing
+              if (controller.isProcessing)
+                SliverFixedExtentList(
+                  itemExtent: LogTile.height,
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => LogTile.skeleton,
+                    childCount: 5,
+                  ),
+                ),
+            ],
+          ));
 }

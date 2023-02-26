@@ -2,39 +2,48 @@ import 'package:entity/entity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
-import '../model/log_filter.dart';
+import '../model/logs_filter.dart';
 
 @sealed
 @immutable
 abstract class LogsState {
-  const LogsState({required this.logs, required this.filter});
+  const LogsState({required this.logs, required this.endOfList, required this.filter});
 
   /// State of the controller when it is idle
   const factory LogsState.idle({
     required List<Log> logs,
-    required LogFilter filter,
+    required bool endOfList,
+    required LogsFilter filter,
   }) = LogsState$Idle;
 
   /// State of the controller when it is processing
   const factory LogsState.loading({
     required List<Log> logs,
-    required LogFilter filter,
+    required bool endOfList,
+    required LogsFilter filter,
   }) = LogsState$Loading;
 
   const factory LogsState.error({
     required List<Log> logs,
-    required LogFilter filter,
+    required bool endOfList,
+    required LogsFilter filter,
     String message,
   }) = LogsState$Error;
 
   /// Initial state of the controller
-  static const LogsState $initial = LogsState.idle(logs: <Log>[], filter: LogFilter.empty());
+  static const LogsState $initial = LogsState.idle(logs: <Log>[], endOfList: false, filter: LogsFilter.empty());
 
   /// The tree of files
   final List<Log> logs;
 
+  /// Whether the list is ended
+  final bool endOfList;
+
+  /// Whether the list has more
+  bool get hasMore => !endOfList;
+
   /// Filter
-  final LogFilter filter;
+  final LogsFilter filter;
 
   /// Message
   abstract final String message;
@@ -45,7 +54,8 @@ abstract class LogsState {
   /// Copy with
   LogsState copyWith({
     List<Log>? logs,
-    LogFilter? filter,
+    bool? endOfList,
+    LogsFilter? filter,
   });
 
   R map<R>({
@@ -87,14 +97,15 @@ abstract class LogsState {
       other is LogsState &&
           runtimeType == other.runtimeType &&
           filter == other.filter &&
-          listEquals<Log>(logs, other.logs);
+          listEquals<Log>(logs, other.logs) &&
+          endOfList == other.endOfList;
 
   @override
   String toString() => message;
 }
 
 class LogsState$Idle extends LogsState {
-  const LogsState$Idle({required super.logs, required super.filter});
+  const LogsState$Idle({required super.logs, required super.endOfList, required super.filter});
 
   @override
   String get message => 'Idle';
@@ -103,8 +114,9 @@ class LogsState$Idle extends LogsState {
   bool get isProcessing => false;
 
   @override
-  LogsState copyWith({List<Log>? logs, LogFilter? filter}) => LogsState$Idle(
+  LogsState copyWith({List<Log>? logs, bool? endOfList, LogsFilter? filter}) => LogsState$Idle(
         logs: logs ?? this.logs,
+        endOfList: endOfList ?? this.endOfList,
         filter: filter ?? this.filter,
       );
 
@@ -117,7 +129,7 @@ class LogsState$Idle extends LogsState {
 }
 
 class LogsState$Loading extends LogsState {
-  const LogsState$Loading({required super.logs, required super.filter});
+  const LogsState$Loading({required super.logs, required super.endOfList, required super.filter});
 
   @override
   String get message => 'Loading...';
@@ -126,8 +138,9 @@ class LogsState$Loading extends LogsState {
   bool get isProcessing => true;
 
   @override
-  LogsState copyWith({List<Log>? logs, LogFilter? filter}) => LogsState$Loading(
+  LogsState copyWith({List<Log>? logs, bool? endOfList, LogsFilter? filter}) => LogsState$Loading(
         logs: logs ?? this.logs,
+        endOfList: endOfList ?? this.endOfList,
         filter: filter ?? this.filter,
       );
 
@@ -140,7 +153,8 @@ class LogsState$Loading extends LogsState {
 }
 
 class LogsState$Error extends LogsState {
-  const LogsState$Error({required super.logs, required super.filter, this.message = 'An error occurred'});
+  const LogsState$Error(
+      {required super.logs, required super.endOfList, required super.filter, this.message = 'An error occurred'});
 
   @override
   final String message;
@@ -149,8 +163,9 @@ class LogsState$Error extends LogsState {
   bool get isProcessing => true;
 
   @override
-  LogsState copyWith({List<Log>? logs, LogFilter? filter, String? message}) => LogsState$Error(
+  LogsState copyWith({List<Log>? logs, bool? endOfList, LogsFilter? filter, String? message}) => LogsState$Error(
         logs: logs ?? this.logs,
+        endOfList: endOfList ?? this.endOfList,
         filter: filter ?? this.filter,
         message: message ?? this.message,
       );

@@ -2,8 +2,8 @@ import 'package:entity/entity.dart';
 import 'package:meta/meta.dart';
 
 @immutable
-class LogFilter {
-  const LogFilter({
+class LogsFilter {
+  const LogsFilter({
     this.search,
     this.projectId,
     this.spanId,
@@ -13,7 +13,7 @@ class LogFilter {
     this.dateTo,
   });
 
-  const LogFilter.empty() : this();
+  const LogsFilter.empty() : this();
 
   final String? search;
   final ProjectID? projectId;
@@ -37,7 +37,7 @@ class LogFilter {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is LogFilter &&
+      other is LogsFilter &&
           runtimeType == other.runtimeType &&
           search == other.search &&
           projectId == other.projectId &&

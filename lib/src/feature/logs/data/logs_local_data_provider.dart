@@ -1,14 +1,15 @@
 import 'package:database/database.dart' as db;
 import 'package:entity/entity.dart';
 
-import '../model/log_filter.dart';
+import '../model/logs_chunk.dart';
+import '../model/logs_filter.dart';
 
 abstract class ILogsLocalDataProvider {
-  Future<List<Log>> fetch({
+  Future<LogsChunk> fetch({
     LogID? from,
     LogID? to,
-    int? count,
-    LogFilter? filter,
+    int count,
+    LogsFilter? filter,
   });
 }
 
@@ -18,12 +19,17 @@ class LogsLocalDataProviderDatabaseImpl implements ILogsLocalDataProvider {
   final db.Database _database;
 
   @override
-  Future<List<Log>> fetch({
+  Future<LogsChunk> fetch({
     LogID? from,
     LogID? to,
-    int? count,
-    LogFilter? filter,
+    int count = 1000,
+    LogsFilter? filter,
   }) async {
-    return [];
+    await Future<void>.delayed(const Duration(seconds: 10));
+    final logs = <Log>[];
+    return LogsChunk(
+      logs: logs,
+      endOfList: logs.length < count,
+    );
   }
 }

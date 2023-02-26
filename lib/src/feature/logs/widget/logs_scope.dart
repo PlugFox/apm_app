@@ -18,11 +18,11 @@ class LogsScope extends StatefulWidget {
   });
 
   /// Returns the [ILogsController] from closest [LogsScope] which encloses the given context.
-  ILogsController controllerOf(BuildContext context) =>
+  static ILogsController controllerOf(BuildContext context) =>
       _InheritedLogs.maybeOf(context, listen: false)?.controller ?? _notFoundInheritedWidgetOfExactType();
 
   /// Returns the List<Log> from closest [LogsScope] which encloses the given context.
-  List<Log> logsOf(BuildContext context, {bool listen = true}) =>
+  static List<Log> logsOf(BuildContext context, {bool listen = true}) =>
       _InheritedLogs.maybeOf(context, listen: listen)?.logs ?? _notFoundInheritedWidgetOfExactType();
 
   static Never _notFoundInheritedWidgetOfExactType() => throw ArgumentError(
@@ -44,33 +44,11 @@ class _LogsScopeState extends State<LogsScope> {
     repository: Dependencies.logsRepository,
   );
 
-  /* #region Lifecycle */
-  @override
-  void initState() {
-    super.initState();
-    // Initial state initialization
-  }
-
-  @override
-  void didUpdateWidget(LogsScope oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Widget configuration changed
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // The configuration of InheritedWidgets has changed
-    // Also called after initState but before build
-  }
-
   @override
   void dispose() {
-    // Permanent removal of a tree stent
+    _controller.dispose();
     super.dispose();
   }
-
-  /* #endregion */
 
   @override
   Widget build(BuildContext context) => ValueListenableBuilder<List<Log>>(
