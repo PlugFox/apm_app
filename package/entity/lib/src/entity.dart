@@ -174,6 +174,7 @@ class Log extends ProjectEntity with Comparable<Log> {
     this.stackTrace,
     this.tags = const <String, String>{},
     this.breadcrumbs = const <String>[],
+    this.characteristics,
   });
 
   /// Unique identifier of the log
@@ -207,6 +208,15 @@ class Log extends ProjectEntity with Comparable<Log> {
   /// Breadcrumbs is a list of breadcrumbs associated with this log event
   final List<String> breadcrumbs;
 
+  /// Characteristics is a JSON Object associated with this log event
+  final Map<String, Object?>? characteristics;
+
+  /// Is this log pinned?
+  bool get pinned => characteristics?['pinned'] == true;
+
+  /// Is this log starred?
+  bool get starred => characteristics?['starred'] == true;
+
   /// Extract lowercased words
   Set<String> extractWords() => _$extractWords(this);
 
@@ -222,6 +232,7 @@ class Log extends ProjectEntity with Comparable<Log> {
     String? stackTrace,
     Map<String, String>? tags,
     List<String>? breadcrumbs,
+    Map<String, Object?>? characteristics,
   }) =>
       Log(
         id: id ?? this.id,
@@ -234,6 +245,7 @@ class Log extends ProjectEntity with Comparable<Log> {
         stackTrace: stackTrace ?? this.stackTrace,
         tags: tags ?? this.tags,
         breadcrumbs: breadcrumbs ?? this.breadcrumbs,
+        characteristics: characteristics ?? this.characteristics,
       );
 
   @override
