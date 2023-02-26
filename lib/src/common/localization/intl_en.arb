@@ -1,0 +1,12 @@
+{
+    "@@locale": "en",
+    "locale": "en_US",
+    "language_code": "en",
+    "@language_code": {
+        "description": "Language code"
+    },
+    "language": "English",
+    "@language":{
+        "description": "The current Language"
+    }
+}

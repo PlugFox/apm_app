@@ -1,0 +1,49 @@
+syntax = "proto3";
+package apm;
+
+// Log is the log message that is sent to the APM server
+// code = 0
+message Log {
+    // Project identifies the project that the log message belongs to
+    string project = 1;
+
+    // Span is the transaction of the log message
+    optional string span = 10;
+
+    // Message is the log message or error associated with this log event
+    string event = 20;
+
+    // Time is the timestamp (in seconds) of the log message
+    int32 time = 30;
+    // Name is the name of the source of the log message
+    optional string name = 31;
+    // Level is the severity level (a value between 0 and 2000);
+    // see the package:logging Level class for an overview of the possible values
+    int32 level = 32;
+
+    // StackTrace a stack trace associated with this log event
+    optional string stack = 50;
+
+    // Tags is a map of key/value pairs associated with this log event
+    map<string, string> tags = 100;
+
+    // Structed data to describe more information pior to the event captured
+    repeated string breadcrumbs = 200;
+}
+
+// Transaction is the span of the log message
+// code = 1
+message Transaction {
+    // Project identifies the project that the log message belongs to
+    string project = 1;
+
+    // Unique identifier of the transaction
+    string id = 10;
+
+    // Short description of transaction type, like "pageload"
+    string operation = 50;
+
+    // Description is a longer description of the transaction
+    // Human-readable identifier, like "GET /category/1/product?id=2"
+    optional string description = 100;
+}
