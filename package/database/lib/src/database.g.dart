@@ -3,6 +3,307 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
+class Characteristic extends Table
+    with TableInfo<Characteristic, CharacteristicData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Characteristic(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+      'type', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints:
+          'NOT NULL CHECK (length(type) > 0 AND length(type) <= 255)');
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _dataMeta = const VerificationMeta('data');
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints:
+          'NOT NULL CHECK (length(data) > 2 AND json_valid(data))');
+  static const VerificationMeta _metaCreatedAtMeta =
+      const VerificationMeta('metaCreatedAt');
+  late final GeneratedColumn<int> metaCreatedAt = GeneratedColumn<int>(
+      'meta_created_at', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL DEFAULT (strftime(\'%s\', \'now\'))',
+      defaultValue: const CustomExpression('strftime(\'%s\', \'now\')'));
+  static const VerificationMeta _metaUpdatedAtMeta =
+      const VerificationMeta('metaUpdatedAt');
+  late final GeneratedColumn<int> metaUpdatedAt = GeneratedColumn<int>(
+      'meta_updated_at', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints:
+          'NOT NULL DEFAULT (strftime(\'%s\', \'now\')) CHECK (meta_updated_at >= meta_created_at)',
+      defaultValue: const CustomExpression('strftime(\'%s\', \'now\')'));
+  @override
+  List<GeneratedColumn> get $columns =>
+      [type, id, data, metaCreatedAt, metaUpdatedAt];
+  @override
+  String get aliasedName => _alias ?? 'characteristic';
+  @override
+  String get actualTableName => 'characteristic';
+  @override
+  VerificationContext validateIntegrity(Insertable<CharacteristicData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('type')) {
+      context.handle(
+          _typeMeta, type.isAcceptableOrUnknown(data['type']!, _typeMeta));
+    } else if (isInserting) {
+      context.missing(_typeMeta);
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('data')) {
+      context.handle(
+          _dataMeta, this.data.isAcceptableOrUnknown(data['data']!, _dataMeta));
+    } else if (isInserting) {
+      context.missing(_dataMeta);
+    }
+    if (data.containsKey('meta_created_at')) {
+      context.handle(
+          _metaCreatedAtMeta,
+          metaCreatedAt.isAcceptableOrUnknown(
+              data['meta_created_at']!, _metaCreatedAtMeta));
+    }
+    if (data.containsKey('meta_updated_at')) {
+      context.handle(
+          _metaUpdatedAtMeta,
+          metaUpdatedAt.isAcceptableOrUnknown(
+              data['meta_updated_at']!, _metaUpdatedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {type, id};
+  @override
+  CharacteristicData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CharacteristicData(
+      type: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}type'])!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      metaCreatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}meta_created_at'])!,
+      metaUpdatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}meta_updated_at'])!,
+    );
+  }
+
+  @override
+  Characteristic createAlias(String alias) {
+    return Characteristic(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+  @override
+  List<String> get customConstraints => const ['PRIMARY KEY(type, id)'];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class CharacteristicData extends DataClass
+    implements Insertable<CharacteristicData> {
+  final String type;
+  final int id;
+  final String data;
+  final int metaCreatedAt;
+  final int metaUpdatedAt;
+  const CharacteristicData(
+      {required this.type,
+      required this.id,
+      required this.data,
+      required this.metaCreatedAt,
+      required this.metaUpdatedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['type'] = Variable<String>(type);
+    map['id'] = Variable<int>(id);
+    map['data'] = Variable<String>(data);
+    map['meta_created_at'] = Variable<int>(metaCreatedAt);
+    map['meta_updated_at'] = Variable<int>(metaUpdatedAt);
+    return map;
+  }
+
+  CharacteristicCompanion toCompanion(bool nullToAbsent) {
+    return CharacteristicCompanion(
+      type: Value(type),
+      id: Value(id),
+      data: Value(data),
+      metaCreatedAt: Value(metaCreatedAt),
+      metaUpdatedAt: Value(metaUpdatedAt),
+    );
+  }
+
+  factory CharacteristicData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CharacteristicData(
+      type: serializer.fromJson<String>(json['type']),
+      id: serializer.fromJson<int>(json['id']),
+      data: serializer.fromJson<String>(json['data']),
+      metaCreatedAt: serializer.fromJson<int>(json['meta_created_at']),
+      metaUpdatedAt: serializer.fromJson<int>(json['meta_updated_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'type': serializer.toJson<String>(type),
+      'id': serializer.toJson<int>(id),
+      'data': serializer.toJson<String>(data),
+      'meta_created_at': serializer.toJson<int>(metaCreatedAt),
+      'meta_updated_at': serializer.toJson<int>(metaUpdatedAt),
+    };
+  }
+
+  CharacteristicData copyWith(
+          {String? type,
+          int? id,
+          String? data,
+          int? metaCreatedAt,
+          int? metaUpdatedAt}) =>
+      CharacteristicData(
+        type: type ?? this.type,
+        id: id ?? this.id,
+        data: data ?? this.data,
+        metaCreatedAt: metaCreatedAt ?? this.metaCreatedAt,
+        metaUpdatedAt: metaUpdatedAt ?? this.metaUpdatedAt,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('CharacteristicData(')
+          ..write('type: $type, ')
+          ..write('id: $id, ')
+          ..write('data: $data, ')
+          ..write('metaCreatedAt: $metaCreatedAt, ')
+          ..write('metaUpdatedAt: $metaUpdatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(type, id, data, metaCreatedAt, metaUpdatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CharacteristicData &&
+          other.type == this.type &&
+          other.id == this.id &&
+          other.data == this.data &&
+          other.metaCreatedAt == this.metaCreatedAt &&
+          other.metaUpdatedAt == this.metaUpdatedAt);
+}
+
+class CharacteristicCompanion extends UpdateCompanion<CharacteristicData> {
+  final Value<String> type;
+  final Value<int> id;
+  final Value<String> data;
+  final Value<int> metaCreatedAt;
+  final Value<int> metaUpdatedAt;
+  const CharacteristicCompanion({
+    this.type = const Value.absent(),
+    this.id = const Value.absent(),
+    this.data = const Value.absent(),
+    this.metaCreatedAt = const Value.absent(),
+    this.metaUpdatedAt = const Value.absent(),
+  });
+  CharacteristicCompanion.insert({
+    required String type,
+    required int id,
+    required String data,
+    this.metaCreatedAt = const Value.absent(),
+    this.metaUpdatedAt = const Value.absent(),
+  })  : type = Value(type),
+        id = Value(id),
+        data = Value(data);
+  static Insertable<CharacteristicData> custom({
+    Expression<String>? type,
+    Expression<int>? id,
+    Expression<String>? data,
+    Expression<int>? metaCreatedAt,
+    Expression<int>? metaUpdatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (type != null) 'type': type,
+      if (id != null) 'id': id,
+      if (data != null) 'data': data,
+      if (metaCreatedAt != null) 'meta_created_at': metaCreatedAt,
+      if (metaUpdatedAt != null) 'meta_updated_at': metaUpdatedAt,
+    });
+  }
+
+  CharacteristicCompanion copyWith(
+      {Value<String>? type,
+      Value<int>? id,
+      Value<String>? data,
+      Value<int>? metaCreatedAt,
+      Value<int>? metaUpdatedAt}) {
+    return CharacteristicCompanion(
+      type: type ?? this.type,
+      id: id ?? this.id,
+      data: data ?? this.data,
+      metaCreatedAt: metaCreatedAt ?? this.metaCreatedAt,
+      metaUpdatedAt: metaUpdatedAt ?? this.metaUpdatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (data.present) {
+      map['data'] = Variable<String>(data.value);
+    }
+    if (metaCreatedAt.present) {
+      map['meta_created_at'] = Variable<int>(metaCreatedAt.value);
+    }
+    if (metaUpdatedAt.present) {
+      map['meta_updated_at'] = Variable<int>(metaUpdatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CharacteristicCompanion(')
+          ..write('type: $type, ')
+          ..write('id: $id, ')
+          ..write('data: $data, ')
+          ..write('metaCreatedAt: $metaCreatedAt, ')
+          ..write('metaUpdatedAt: $metaUpdatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class Project extends Table with TableInfo<Project, ProjectData> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -21,10 +322,9 @@ class Project extends Table with TableInfo<Project, ProjectData> {
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression('\'\''));
-  static const VerificationMeta _descriptionMeta =
-      const VerificationMeta('description');
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-      'description', aliasedName, true,
+  static const VerificationMeta _memoMeta = const VerificationMeta('memo');
+  late final GeneratedColumn<String> memo = GeneratedColumn<String>(
+      'memo', aliasedName, true,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: '');
@@ -47,7 +347,7 @@ class Project extends Table with TableInfo<Project, ProjectData> {
       defaultValue: const CustomExpression('strftime(\'%s\', \'now\')'));
   @override
   List<GeneratedColumn> get $columns =>
-      [id, name, description, metaCreatedAt, metaUpdatedAt];
+      [id, name, memo, metaCreatedAt, metaUpdatedAt];
   @override
   String get aliasedName => _alias ?? 'project';
   @override
@@ -66,11 +366,9 @@ class Project extends Table with TableInfo<Project, ProjectData> {
       context.handle(
           _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     }
-    if (data.containsKey('description')) {
+    if (data.containsKey('memo')) {
       context.handle(
-          _descriptionMeta,
-          description.isAcceptableOrUnknown(
-              data['description']!, _descriptionMeta));
+          _memoMeta, memo.isAcceptableOrUnknown(data['memo']!, _memoMeta));
     }
     if (data.containsKey('meta_created_at')) {
       context.handle(
@@ -97,8 +395,8 @@ class Project extends Table with TableInfo<Project, ProjectData> {
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      description: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      memo: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}memo']),
       metaCreatedAt: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}meta_created_at'])!,
       metaUpdatedAt: attachedDatabase.typeMapping
@@ -120,13 +418,13 @@ class Project extends Table with TableInfo<Project, ProjectData> {
 class ProjectData extends DataClass implements Insertable<ProjectData> {
   final String id;
   final String name;
-  final String? description;
+  final String? memo;
   final int metaCreatedAt;
   final int metaUpdatedAt;
   const ProjectData(
       {required this.id,
       required this.name,
-      this.description,
+      this.memo,
       required this.metaCreatedAt,
       required this.metaUpdatedAt});
   @override
@@ -134,8 +432,8 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['name'] = Variable<String>(name);
-    if (!nullToAbsent || description != null) {
-      map['description'] = Variable<String>(description);
+    if (!nullToAbsent || memo != null) {
+      map['memo'] = Variable<String>(memo);
     }
     map['meta_created_at'] = Variable<int>(metaCreatedAt);
     map['meta_updated_at'] = Variable<int>(metaUpdatedAt);
@@ -146,9 +444,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
     return ProjectCompanion(
       id: Value(id),
       name: Value(name),
-      description: description == null && nullToAbsent
-          ? const Value.absent()
-          : Value(description),
+      memo: memo == null && nullToAbsent ? const Value.absent() : Value(memo),
       metaCreatedAt: Value(metaCreatedAt),
       metaUpdatedAt: Value(metaUpdatedAt),
     );
@@ -160,7 +456,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
     return ProjectData(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
-      description: serializer.fromJson<String?>(json['description']),
+      memo: serializer.fromJson<String?>(json['memo']),
       metaCreatedAt: serializer.fromJson<int>(json['meta_created_at']),
       metaUpdatedAt: serializer.fromJson<int>(json['meta_updated_at']),
     );
@@ -171,7 +467,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'name': serializer.toJson<String>(name),
-      'description': serializer.toJson<String?>(description),
+      'memo': serializer.toJson<String?>(memo),
       'meta_created_at': serializer.toJson<int>(metaCreatedAt),
       'meta_updated_at': serializer.toJson<int>(metaUpdatedAt),
     };
@@ -180,13 +476,13 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
   ProjectData copyWith(
           {String? id,
           String? name,
-          Value<String?> description = const Value.absent(),
+          Value<String?> memo = const Value.absent(),
           int? metaCreatedAt,
           int? metaUpdatedAt}) =>
       ProjectData(
         id: id ?? this.id,
         name: name ?? this.name,
-        description: description.present ? description.value : this.description,
+        memo: memo.present ? memo.value : this.memo,
         metaCreatedAt: metaCreatedAt ?? this.metaCreatedAt,
         metaUpdatedAt: metaUpdatedAt ?? this.metaUpdatedAt,
       );
@@ -195,7 +491,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
     return (StringBuffer('ProjectData(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('description: $description, ')
+          ..write('memo: $memo, ')
           ..write('metaCreatedAt: $metaCreatedAt, ')
           ..write('metaUpdatedAt: $metaUpdatedAt')
           ..write(')'))
@@ -203,15 +499,14 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, name, description, metaCreatedAt, metaUpdatedAt);
+  int get hashCode => Object.hash(id, name, memo, metaCreatedAt, metaUpdatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ProjectData &&
           other.id == this.id &&
           other.name == this.name &&
-          other.description == this.description &&
+          other.memo == this.memo &&
           other.metaCreatedAt == this.metaCreatedAt &&
           other.metaUpdatedAt == this.metaUpdatedAt);
 }
@@ -219,34 +514,34 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
 class ProjectCompanion extends UpdateCompanion<ProjectData> {
   final Value<String> id;
   final Value<String> name;
-  final Value<String?> description;
+  final Value<String?> memo;
   final Value<int> metaCreatedAt;
   final Value<int> metaUpdatedAt;
   const ProjectCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
-    this.description = const Value.absent(),
+    this.memo = const Value.absent(),
     this.metaCreatedAt = const Value.absent(),
     this.metaUpdatedAt = const Value.absent(),
   });
   ProjectCompanion.insert({
     required String id,
     this.name = const Value.absent(),
-    this.description = const Value.absent(),
+    this.memo = const Value.absent(),
     this.metaCreatedAt = const Value.absent(),
     this.metaUpdatedAt = const Value.absent(),
   }) : id = Value(id);
   static Insertable<ProjectData> custom({
     Expression<String>? id,
     Expression<String>? name,
-    Expression<String>? description,
+    Expression<String>? memo,
     Expression<int>? metaCreatedAt,
     Expression<int>? metaUpdatedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
-      if (description != null) 'description': description,
+      if (memo != null) 'memo': memo,
       if (metaCreatedAt != null) 'meta_created_at': metaCreatedAt,
       if (metaUpdatedAt != null) 'meta_updated_at': metaUpdatedAt,
     });
@@ -255,13 +550,13 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
   ProjectCompanion copyWith(
       {Value<String>? id,
       Value<String>? name,
-      Value<String?>? description,
+      Value<String?>? memo,
       Value<int>? metaCreatedAt,
       Value<int>? metaUpdatedAt}) {
     return ProjectCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
-      description: description ?? this.description,
+      memo: memo ?? this.memo,
       metaCreatedAt: metaCreatedAt ?? this.metaCreatedAt,
       metaUpdatedAt: metaUpdatedAt ?? this.metaUpdatedAt,
     );
@@ -276,8 +571,8 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
+    if (memo.present) {
+      map['memo'] = Variable<String>(memo.value);
     }
     if (metaCreatedAt.present) {
       map['meta_created_at'] = Variable<int>(metaCreatedAt.value);
@@ -293,7 +588,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
     return (StringBuffer('ProjectCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('description: $description, ')
+          ..write('memo: $memo, ')
           ..write('metaCreatedAt: $metaCreatedAt, ')
           ..write('metaUpdatedAt: $metaUpdatedAt')
           ..write(')'))
@@ -326,10 +621,9 @@ class Span extends Table with TableInfo<Span, SpanData> {
       type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
-  static const VerificationMeta _descriptionMeta =
-      const VerificationMeta('description');
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-      'description', aliasedName, true,
+  static const VerificationMeta _memoMeta = const VerificationMeta('memo');
+  late final GeneratedColumn<String> memo = GeneratedColumn<String>(
+      'memo', aliasedName, true,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: '');
@@ -352,7 +646,7 @@ class Span extends Table with TableInfo<Span, SpanData> {
       defaultValue: const CustomExpression('strftime(\'%s\', \'now\')'));
   @override
   List<GeneratedColumn> get $columns =>
-      [id, projectId, operation, description, metaCreatedAt, metaUpdatedAt];
+      [id, projectId, operation, memo, metaCreatedAt, metaUpdatedAt];
   @override
   String get aliasedName => _alias ?? 'span';
   @override
@@ -379,11 +673,9 @@ class Span extends Table with TableInfo<Span, SpanData> {
     } else if (isInserting) {
       context.missing(_operationMeta);
     }
-    if (data.containsKey('description')) {
+    if (data.containsKey('memo')) {
       context.handle(
-          _descriptionMeta,
-          description.isAcceptableOrUnknown(
-              data['description']!, _descriptionMeta));
+          _memoMeta, memo.isAcceptableOrUnknown(data['memo']!, _memoMeta));
     }
     if (data.containsKey('meta_created_at')) {
       context.handle(
@@ -412,8 +704,8 @@ class Span extends Table with TableInfo<Span, SpanData> {
           .read(DriftSqlType.string, data['${effectivePrefix}project_id'])!,
       operation: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}operation'])!,
-      description: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      memo: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}memo']),
       metaCreatedAt: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}meta_created_at'])!,
       metaUpdatedAt: attachedDatabase.typeMapping
@@ -440,14 +732,14 @@ class SpanData extends DataClass implements Insertable<SpanData> {
   final String id;
   final String projectId;
   final String operation;
-  final String? description;
+  final String? memo;
   final int metaCreatedAt;
   final int metaUpdatedAt;
   const SpanData(
       {required this.id,
       required this.projectId,
       required this.operation,
-      this.description,
+      this.memo,
       required this.metaCreatedAt,
       required this.metaUpdatedAt});
   @override
@@ -456,8 +748,8 @@ class SpanData extends DataClass implements Insertable<SpanData> {
     map['id'] = Variable<String>(id);
     map['project_id'] = Variable<String>(projectId);
     map['operation'] = Variable<String>(operation);
-    if (!nullToAbsent || description != null) {
-      map['description'] = Variable<String>(description);
+    if (!nullToAbsent || memo != null) {
+      map['memo'] = Variable<String>(memo);
     }
     map['meta_created_at'] = Variable<int>(metaCreatedAt);
     map['meta_updated_at'] = Variable<int>(metaUpdatedAt);
@@ -469,9 +761,7 @@ class SpanData extends DataClass implements Insertable<SpanData> {
       id: Value(id),
       projectId: Value(projectId),
       operation: Value(operation),
-      description: description == null && nullToAbsent
-          ? const Value.absent()
-          : Value(description),
+      memo: memo == null && nullToAbsent ? const Value.absent() : Value(memo),
       metaCreatedAt: Value(metaCreatedAt),
       metaUpdatedAt: Value(metaUpdatedAt),
     );
@@ -484,7 +774,7 @@ class SpanData extends DataClass implements Insertable<SpanData> {
       id: serializer.fromJson<String>(json['id']),
       projectId: serializer.fromJson<String>(json['project_id']),
       operation: serializer.fromJson<String>(json['operation']),
-      description: serializer.fromJson<String?>(json['description']),
+      memo: serializer.fromJson<String?>(json['memo']),
       metaCreatedAt: serializer.fromJson<int>(json['meta_created_at']),
       metaUpdatedAt: serializer.fromJson<int>(json['meta_updated_at']),
     );
@@ -496,7 +786,7 @@ class SpanData extends DataClass implements Insertable<SpanData> {
       'id': serializer.toJson<String>(id),
       'project_id': serializer.toJson<String>(projectId),
       'operation': serializer.toJson<String>(operation),
-      'description': serializer.toJson<String?>(description),
+      'memo': serializer.toJson<String?>(memo),
       'meta_created_at': serializer.toJson<int>(metaCreatedAt),
       'meta_updated_at': serializer.toJson<int>(metaUpdatedAt),
     };
@@ -506,14 +796,14 @@ class SpanData extends DataClass implements Insertable<SpanData> {
           {String? id,
           String? projectId,
           String? operation,
-          Value<String?> description = const Value.absent(),
+          Value<String?> memo = const Value.absent(),
           int? metaCreatedAt,
           int? metaUpdatedAt}) =>
       SpanData(
         id: id ?? this.id,
         projectId: projectId ?? this.projectId,
         operation: operation ?? this.operation,
-        description: description.present ? description.value : this.description,
+        memo: memo.present ? memo.value : this.memo,
         metaCreatedAt: metaCreatedAt ?? this.metaCreatedAt,
         metaUpdatedAt: metaUpdatedAt ?? this.metaUpdatedAt,
       );
@@ -523,7 +813,7 @@ class SpanData extends DataClass implements Insertable<SpanData> {
           ..write('id: $id, ')
           ..write('projectId: $projectId, ')
           ..write('operation: $operation, ')
-          ..write('description: $description, ')
+          ..write('memo: $memo, ')
           ..write('metaCreatedAt: $metaCreatedAt, ')
           ..write('metaUpdatedAt: $metaUpdatedAt')
           ..write(')'))
@@ -531,8 +821,8 @@ class SpanData extends DataClass implements Insertable<SpanData> {
   }
 
   @override
-  int get hashCode => Object.hash(
-      id, projectId, operation, description, metaCreatedAt, metaUpdatedAt);
+  int get hashCode =>
+      Object.hash(id, projectId, operation, memo, metaCreatedAt, metaUpdatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -540,7 +830,7 @@ class SpanData extends DataClass implements Insertable<SpanData> {
           other.id == this.id &&
           other.projectId == this.projectId &&
           other.operation == this.operation &&
-          other.description == this.description &&
+          other.memo == this.memo &&
           other.metaCreatedAt == this.metaCreatedAt &&
           other.metaUpdatedAt == this.metaUpdatedAt);
 }
@@ -549,14 +839,14 @@ class SpanCompanion extends UpdateCompanion<SpanData> {
   final Value<String> id;
   final Value<String> projectId;
   final Value<String> operation;
-  final Value<String?> description;
+  final Value<String?> memo;
   final Value<int> metaCreatedAt;
   final Value<int> metaUpdatedAt;
   const SpanCompanion({
     this.id = const Value.absent(),
     this.projectId = const Value.absent(),
     this.operation = const Value.absent(),
-    this.description = const Value.absent(),
+    this.memo = const Value.absent(),
     this.metaCreatedAt = const Value.absent(),
     this.metaUpdatedAt = const Value.absent(),
   });
@@ -564,7 +854,7 @@ class SpanCompanion extends UpdateCompanion<SpanData> {
     required String id,
     required String projectId,
     required String operation,
-    this.description = const Value.absent(),
+    this.memo = const Value.absent(),
     this.metaCreatedAt = const Value.absent(),
     this.metaUpdatedAt = const Value.absent(),
   })  : id = Value(id),
@@ -574,7 +864,7 @@ class SpanCompanion extends UpdateCompanion<SpanData> {
     Expression<String>? id,
     Expression<String>? projectId,
     Expression<String>? operation,
-    Expression<String>? description,
+    Expression<String>? memo,
     Expression<int>? metaCreatedAt,
     Expression<int>? metaUpdatedAt,
   }) {
@@ -582,7 +872,7 @@ class SpanCompanion extends UpdateCompanion<SpanData> {
       if (id != null) 'id': id,
       if (projectId != null) 'project_id': projectId,
       if (operation != null) 'operation': operation,
-      if (description != null) 'description': description,
+      if (memo != null) 'memo': memo,
       if (metaCreatedAt != null) 'meta_created_at': metaCreatedAt,
       if (metaUpdatedAt != null) 'meta_updated_at': metaUpdatedAt,
     });
@@ -592,14 +882,14 @@ class SpanCompanion extends UpdateCompanion<SpanData> {
       {Value<String>? id,
       Value<String>? projectId,
       Value<String>? operation,
-      Value<String?>? description,
+      Value<String?>? memo,
       Value<int>? metaCreatedAt,
       Value<int>? metaUpdatedAt}) {
     return SpanCompanion(
       id: id ?? this.id,
       projectId: projectId ?? this.projectId,
       operation: operation ?? this.operation,
-      description: description ?? this.description,
+      memo: memo ?? this.memo,
       metaCreatedAt: metaCreatedAt ?? this.metaCreatedAt,
       metaUpdatedAt: metaUpdatedAt ?? this.metaUpdatedAt,
     );
@@ -617,8 +907,8 @@ class SpanCompanion extends UpdateCompanion<SpanData> {
     if (operation.present) {
       map['operation'] = Variable<String>(operation.value);
     }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
+    if (memo.present) {
+      map['memo'] = Variable<String>(memo.value);
     }
     if (metaCreatedAt.present) {
       map['meta_created_at'] = Variable<int>(metaCreatedAt.value);
@@ -635,7 +925,7 @@ class SpanCompanion extends UpdateCompanion<SpanData> {
           ..write('id: $id, ')
           ..write('projectId: $projectId, ')
           ..write('operation: $operation, ')
-          ..write('description: $description, ')
+          ..write('memo: $memo, ')
           ..write('metaCreatedAt: $metaCreatedAt, ')
           ..write('metaUpdatedAt: $metaUpdatedAt')
           ..write(')'))
@@ -1397,14 +1687,14 @@ class Breadcrumb extends Table with TableInfo<Breadcrumb, BreadcrumbData> {
       type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
-  static const VerificationMeta _valueMeta = const VerificationMeta('value');
-  late final GeneratedColumn<String> value = GeneratedColumn<String>(
-      'value', aliasedName, false,
+  static const VerificationMeta _vMeta = const VerificationMeta('v');
+  late final GeneratedColumn<String> v = GeneratedColumn<String>(
+      'v', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   @override
-  List<GeneratedColumn> get $columns => [id, logId, value];
+  List<GeneratedColumn> get $columns => [id, logId, v];
   @override
   String get aliasedName => _alias ?? 'breadcrumb';
   @override
@@ -1423,11 +1713,10 @@ class Breadcrumb extends Table with TableInfo<Breadcrumb, BreadcrumbData> {
     } else if (isInserting) {
       context.missing(_logIdMeta);
     }
-    if (data.containsKey('value')) {
-      context.handle(
-          _valueMeta, value.isAcceptableOrUnknown(data['value']!, _valueMeta));
+    if (data.containsKey('v')) {
+      context.handle(_vMeta, v.isAcceptableOrUnknown(data['v']!, _vMeta));
     } else if (isInserting) {
-      context.missing(_valueMeta);
+      context.missing(_vMeta);
     }
     return context;
   }
@@ -1442,8 +1731,8 @@ class Breadcrumb extends Table with TableInfo<Breadcrumb, BreadcrumbData> {
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       logId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}log_id'])!,
-      value: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}value'])!,
+      v: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}v'])!,
     );
   }
 
@@ -1465,15 +1754,15 @@ class Breadcrumb extends Table with TableInfo<Breadcrumb, BreadcrumbData> {
 class BreadcrumbData extends DataClass implements Insertable<BreadcrumbData> {
   final int id;
   final int logId;
-  final String value;
+  final String v;
   const BreadcrumbData(
-      {required this.id, required this.logId, required this.value});
+      {required this.id, required this.logId, required this.v});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['log_id'] = Variable<int>(logId);
-    map['value'] = Variable<String>(value);
+    map['v'] = Variable<String>(v);
     return map;
   }
 
@@ -1481,7 +1770,7 @@ class BreadcrumbData extends DataClass implements Insertable<BreadcrumbData> {
     return BreadcrumbCompanion(
       id: Value(id),
       logId: Value(logId),
-      value: Value(value),
+      v: Value(v),
     );
   }
 
@@ -1491,7 +1780,7 @@ class BreadcrumbData extends DataClass implements Insertable<BreadcrumbData> {
     return BreadcrumbData(
       id: serializer.fromJson<int>(json['id']),
       logId: serializer.fromJson<int>(json['log_id']),
-      value: serializer.fromJson<String>(json['value']),
+      v: serializer.fromJson<String>(json['v']),
     );
   }
   @override
@@ -1500,70 +1789,69 @@ class BreadcrumbData extends DataClass implements Insertable<BreadcrumbData> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'log_id': serializer.toJson<int>(logId),
-      'value': serializer.toJson<String>(value),
+      'v': serializer.toJson<String>(v),
     };
   }
 
-  BreadcrumbData copyWith({int? id, int? logId, String? value}) =>
-      BreadcrumbData(
+  BreadcrumbData copyWith({int? id, int? logId, String? v}) => BreadcrumbData(
         id: id ?? this.id,
         logId: logId ?? this.logId,
-        value: value ?? this.value,
+        v: v ?? this.v,
       );
   @override
   String toString() {
     return (StringBuffer('BreadcrumbData(')
           ..write('id: $id, ')
           ..write('logId: $logId, ')
-          ..write('value: $value')
+          ..write('v: $v')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, logId, value);
+  int get hashCode => Object.hash(id, logId, v);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is BreadcrumbData &&
           other.id == this.id &&
           other.logId == this.logId &&
-          other.value == this.value);
+          other.v == this.v);
 }
 
 class BreadcrumbCompanion extends UpdateCompanion<BreadcrumbData> {
   final Value<int> id;
   final Value<int> logId;
-  final Value<String> value;
+  final Value<String> v;
   const BreadcrumbCompanion({
     this.id = const Value.absent(),
     this.logId = const Value.absent(),
-    this.value = const Value.absent(),
+    this.v = const Value.absent(),
   });
   BreadcrumbCompanion.insert({
     this.id = const Value.absent(),
     required int logId,
-    required String value,
+    required String v,
   })  : logId = Value(logId),
-        value = Value(value);
+        v = Value(v);
   static Insertable<BreadcrumbData> custom({
     Expression<int>? id,
     Expression<int>? logId,
-    Expression<String>? value,
+    Expression<String>? v,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (logId != null) 'log_id': logId,
-      if (value != null) 'value': value,
+      if (v != null) 'v': v,
     });
   }
 
   BreadcrumbCompanion copyWith(
-      {Value<int>? id, Value<int>? logId, Value<String>? value}) {
+      {Value<int>? id, Value<int>? logId, Value<String>? v}) {
     return BreadcrumbCompanion(
       id: id ?? this.id,
       logId: logId ?? this.logId,
-      value: value ?? this.value,
+      v: v ?? this.v,
     );
   }
 
@@ -1576,8 +1864,8 @@ class BreadcrumbCompanion extends UpdateCompanion<BreadcrumbData> {
     if (logId.present) {
       map['log_id'] = Variable<int>(logId.value);
     }
-    if (value.present) {
-      map['value'] = Variable<String>(value.value);
+    if (v.present) {
+      map['v'] = Variable<String>(v.value);
     }
     return map;
   }
@@ -1587,7 +1875,7 @@ class BreadcrumbCompanion extends UpdateCompanion<BreadcrumbData> {
     return (StringBuffer('BreadcrumbCompanion(')
           ..write('id: $id, ')
           ..write('logId: $logId, ')
-          ..write('value: $value')
+          ..write('v: $v')
           ..write(')'))
         .toString();
   }
@@ -1616,14 +1904,14 @@ class Search extends Table with TableInfo<Search, SearchData> {
       type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
-  static const VerificationMeta _lengthMeta = const VerificationMeta('length');
-  late final GeneratedColumn<int> length = GeneratedColumn<int>(
-      'length', aliasedName, false,
+  static const VerificationMeta _lenMeta = const VerificationMeta('len');
+  late final GeneratedColumn<int> len = GeneratedColumn<int>(
+      'len', aliasedName, false,
       type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   @override
-  List<GeneratedColumn> get $columns => [suffix, logId, word, length];
+  List<GeneratedColumn> get $columns => [suffix, logId, word, len];
   @override
   String get aliasedName => _alias ?? 'search';
   @override
@@ -1651,11 +1939,11 @@ class Search extends Table with TableInfo<Search, SearchData> {
     } else if (isInserting) {
       context.missing(_wordMeta);
     }
-    if (data.containsKey('length')) {
-      context.handle(_lengthMeta,
-          length.isAcceptableOrUnknown(data['length']!, _lengthMeta));
+    if (data.containsKey('len')) {
+      context.handle(
+          _lenMeta, len.isAcceptableOrUnknown(data['len']!, _lenMeta));
     } else if (isInserting) {
-      context.missing(_lengthMeta);
+      context.missing(_lenMeta);
     }
     return context;
   }
@@ -1672,8 +1960,8 @@ class Search extends Table with TableInfo<Search, SearchData> {
           .read(DriftSqlType.int, data['${effectivePrefix}log_id'])!,
       word: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}word'])!,
-      length: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}length'])!,
+      len: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}len'])!,
     );
   }
 
@@ -1697,19 +1985,19 @@ class SearchData extends DataClass implements Insertable<SearchData> {
   final String suffix;
   final int logId;
   final String word;
-  final int length;
+  final int len;
   const SearchData(
       {required this.suffix,
       required this.logId,
       required this.word,
-      required this.length});
+      required this.len});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['suffix'] = Variable<String>(suffix);
     map['log_id'] = Variable<int>(logId);
     map['word'] = Variable<String>(word);
-    map['length'] = Variable<int>(length);
+    map['len'] = Variable<int>(len);
     return map;
   }
 
@@ -1718,7 +2006,7 @@ class SearchData extends DataClass implements Insertable<SearchData> {
       suffix: Value(suffix),
       logId: Value(logId),
       word: Value(word),
-      length: Value(length),
+      len: Value(len),
     );
   }
 
@@ -1729,7 +2017,7 @@ class SearchData extends DataClass implements Insertable<SearchData> {
       suffix: serializer.fromJson<String>(json['suffix']),
       logId: serializer.fromJson<int>(json['log_id']),
       word: serializer.fromJson<String>(json['word']),
-      length: serializer.fromJson<int>(json['length']),
+      len: serializer.fromJson<int>(json['len']),
     );
   }
   @override
@@ -1739,17 +2027,16 @@ class SearchData extends DataClass implements Insertable<SearchData> {
       'suffix': serializer.toJson<String>(suffix),
       'log_id': serializer.toJson<int>(logId),
       'word': serializer.toJson<String>(word),
-      'length': serializer.toJson<int>(length),
+      'len': serializer.toJson<int>(len),
     };
   }
 
-  SearchData copyWith(
-          {String? suffix, int? logId, String? word, int? length}) =>
+  SearchData copyWith({String? suffix, int? logId, String? word, int? len}) =>
       SearchData(
         suffix: suffix ?? this.suffix,
         logId: logId ?? this.logId,
         word: word ?? this.word,
-        length: length ?? this.length,
+        len: len ?? this.len,
       );
   @override
   String toString() {
@@ -1757,13 +2044,13 @@ class SearchData extends DataClass implements Insertable<SearchData> {
           ..write('suffix: $suffix, ')
           ..write('logId: $logId, ')
           ..write('word: $word, ')
-          ..write('length: $length')
+          ..write('len: $len')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(suffix, logId, word, length);
+  int get hashCode => Object.hash(suffix, logId, word, len);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1771,40 +2058,40 @@ class SearchData extends DataClass implements Insertable<SearchData> {
           other.suffix == this.suffix &&
           other.logId == this.logId &&
           other.word == this.word &&
-          other.length == this.length);
+          other.len == this.len);
 }
 
 class SearchCompanion extends UpdateCompanion<SearchData> {
   final Value<String> suffix;
   final Value<int> logId;
   final Value<String> word;
-  final Value<int> length;
+  final Value<int> len;
   const SearchCompanion({
     this.suffix = const Value.absent(),
     this.logId = const Value.absent(),
     this.word = const Value.absent(),
-    this.length = const Value.absent(),
+    this.len = const Value.absent(),
   });
   SearchCompanion.insert({
     required String suffix,
     required int logId,
     required String word,
-    required int length,
+    required int len,
   })  : suffix = Value(suffix),
         logId = Value(logId),
         word = Value(word),
-        length = Value(length);
+        len = Value(len);
   static Insertable<SearchData> custom({
     Expression<String>? suffix,
     Expression<int>? logId,
     Expression<String>? word,
-    Expression<int>? length,
+    Expression<int>? len,
   }) {
     return RawValuesInsertable({
       if (suffix != null) 'suffix': suffix,
       if (logId != null) 'log_id': logId,
       if (word != null) 'word': word,
-      if (length != null) 'length': length,
+      if (len != null) 'len': len,
     });
   }
 
@@ -1812,12 +2099,12 @@ class SearchCompanion extends UpdateCompanion<SearchData> {
       {Value<String>? suffix,
       Value<int>? logId,
       Value<String>? word,
-      Value<int>? length}) {
+      Value<int>? len}) {
     return SearchCompanion(
       suffix: suffix ?? this.suffix,
       logId: logId ?? this.logId,
       word: word ?? this.word,
-      length: length ?? this.length,
+      len: len ?? this.len,
     );
   }
 
@@ -1833,8 +2120,8 @@ class SearchCompanion extends UpdateCompanion<SearchData> {
     if (word.present) {
       map['word'] = Variable<String>(word.value);
     }
-    if (length.present) {
-      map['length'] = Variable<int>(length.value);
+    if (len.present) {
+      map['len'] = Variable<int>(len.value);
     }
     return map;
   }
@@ -1845,7 +2132,7 @@ class SearchCompanion extends UpdateCompanion<SearchData> {
           ..write('suffix: $suffix, ')
           ..write('logId: $logId, ')
           ..write('word: $word, ')
-          ..write('length: $length')
+          ..write('len: $len')
           ..write(')'))
         .toString();
   }
@@ -2107,6 +2394,16 @@ class KvCompanion extends UpdateCompanion<KvData> {
 
 abstract class _$Database extends GeneratedDatabase {
   _$Database(QueryExecutor e) : super(e);
+  late final Characteristic characteristic = Characteristic(this);
+  late final Index characteristicMetaCreatedAtIdx = Index(
+      'characteristic_meta_created_at_idx',
+      'CREATE INDEX IF NOT EXISTS characteristic_meta_created_at_idx ON characteristic (meta_created_at)');
+  late final Index characteristicMetaUpdatedAtIdx = Index(
+      'characteristic_meta_updated_at_idx',
+      'CREATE INDEX IF NOT EXISTS characteristic_meta_updated_at_idx ON characteristic (meta_updated_at)');
+  late final Trigger characteristicMetaUpdatedAtTrig = Trigger(
+      'CREATE TRIGGER IF NOT EXISTS characteristic_meta_updated_at_trig AFTER UPDATE ON characteristic BEGIN UPDATE characteristic SET meta_updated_at = strftime(\'%s\', \'now\') WHERE type = NEW.type AND id = NEW.id;END',
+      'characteristic_meta_updated_at_trig');
   late final Project project = Project(this);
   late final Index projectNameIdx = Index('project_name_idx',
       'CREATE INDEX IF NOT EXISTS project_name_idx ON project (name)');
@@ -2120,7 +2417,7 @@ abstract class _$Database extends GeneratedDatabase {
       'CREATE TRIGGER IF NOT EXISTS project_meta_updated_at_trig AFTER UPDATE ON project BEGIN UPDATE project SET meta_updated_at = strftime(\'%s\', \'now\') WHERE id = NEW.id;END',
       'project_meta_updated_at_trig');
   late final Trigger projectEmptyNameTrig = Trigger(
-      'CREATE TRIGGER IF NOT EXISTS project_empty_name_trig AFTER INSERT ON project WHEN coalesce(NEW.name, \'\') = \'\' BEGIN UPDATE project SET name = NEW.id WHERE "rowid" = NEW."rowid";END',
+      'CREATE TRIGGER IF NOT EXISTS project_empty_name_trig AFTER INSERT ON project WHEN coalesce(NEW.name, \'\') = \'\' BEGIN UPDATE project SET name = NEW.id WHERE id = NEW.id;END',
       'project_empty_name_trig');
   late final Span span = Span(this);
   late final Index spanProjectIdIdx = Index('span_project_id_idx',
@@ -2165,8 +2462,8 @@ abstract class _$Database extends GeneratedDatabase {
       'CREATE INDEX IF NOT EXISTS search_suffix_idx ON search (suffix)');
   late final Index searchLogIdIdx = Index('search_log_id_idx',
       'CREATE INDEX IF NOT EXISTS search_log_id_idx ON search (log_id)');
-  late final Index searchLengthIdx = Index('search_length_idx',
-      'CREATE INDEX IF NOT EXISTS search_length_idx ON search (length)');
+  late final Index searchLenIdx = Index('search_len_idx',
+      'CREATE INDEX IF NOT EXISTS search_len_idx ON search (len)');
   late final Kv kv = Kv(this);
   late final Index kvMetaCreatedAtIdx = Index('kv_meta_created_at_idx',
       'CREATE INDEX IF NOT EXISTS kv_meta_created_at_idx ON kv (meta_created_at)');
@@ -2180,6 +2477,10 @@ abstract class _$Database extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
+        characteristic,
+        characteristicMetaCreatedAtIdx,
+        characteristicMetaUpdatedAtIdx,
+        characteristicMetaUpdatedAtTrig,
         project,
         projectNameIdx,
         projectMetaCreatedAtIdx,
@@ -2209,7 +2510,7 @@ abstract class _$Database extends GeneratedDatabase {
         search,
         searchSuffixIdx,
         searchLogIdIdx,
-        searchLengthIdx,
+        searchLenIdx,
         kv,
         kvMetaCreatedAtIdx,
         kvMetaUpdatedAtIdx,
@@ -2218,6 +2519,13 @@ abstract class _$Database extends GeneratedDatabase {
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
         [
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('characteristic',
+                limitUpdateKind: UpdateKind.update),
+            result: [
+              TableUpdate('characteristic', kind: UpdateKind.update),
+            ],
+          ),
           WritePropagation(
             on: TableUpdateQuery.onTableName('project',
                 limitUpdateKind: UpdateKind.update),

@@ -108,6 +108,7 @@ class Span extends ProjectEntity with Comparable<Span> {
     required this.id,
     required this.projectId,
     required this.operation,
+    this.description,
   });
 
   /// Unique identifier of the transaction
@@ -120,16 +121,21 @@ class Span extends ProjectEntity with Comparable<Span> {
   /// Short description of transaction type, like "pageload"
   final String operation;
 
+  /// Description
+  final String? description;
+
   /// Copy with
   Span copyWith({
     SpanID? id,
     ProjectID? projectId,
     String? operation,
+    String? description,
   }) =>
       Span(
         id: id ?? this.id,
         projectId: projectId ?? this.projectId,
         operation: operation ?? this.operation,
+        description: description ?? this.description,
       );
 
   @override

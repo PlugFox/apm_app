@@ -106,6 +106,7 @@ ProjectEntity? _decodeEntity(td.Uint8List bytes) {
         id: message.id,
         projectId: message.project,
         operation: message.operation,
+        description: message.description,
       );
     } else {
       return null;

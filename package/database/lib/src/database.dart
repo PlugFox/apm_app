@@ -39,6 +39,7 @@ abstract class IKeyValueStorage {
   include: <String>{
     'ddl/kv.drift',
     'ddl/log.drift',
+    'ddl/characteristic.drift',
   },
   tables: <Type>[],
   daos: <Type>[],

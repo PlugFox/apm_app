@@ -48,6 +48,7 @@ Future<void> _$insert(db.Database $, List<ProjectEntity> entities) async {
           id: s.id,
           projectId: s.projectId,
           operation: s.operation,
+          memo: db.Value.ofNullable(s.description),
         ),
       ),
     );
@@ -96,7 +97,7 @@ Future<void> _$insert(db.Database $, List<ProjectEntity> entities) async {
           if (l.breadcrumbs.isNotEmpty) {
             batch.insertAll(
               $.breadcrumb,
-              l.breadcrumbs.map<db.BreadcrumbCompanion>((e) => db.BreadcrumbCompanion.insert(logId: logId, value: e)),
+              l.breadcrumbs.map<db.BreadcrumbCompanion>((e) => db.BreadcrumbCompanion.insert(logId: logId, v: e)),
             );
           }
           // Insert search tokens
@@ -109,7 +110,7 @@ Future<void> _$insert(db.Database $, List<ProjectEntity> entities) async {
                   .map<db.SearchCompanion>((e) => db.SearchCompanion.insert(
                         suffix: e.substring(0, 3),
                         logId: logId,
-                        length: e.length,
+                        len: e.length,
                         word: e,
                       ))
                   .toList(),

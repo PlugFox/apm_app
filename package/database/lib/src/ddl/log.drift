@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS project (
     name TEXT NOT NULL DEFAULT (''),
 
     -- Description
-    description TEXT,
+    memo TEXT,
 
     -- Created date (unixtime in seconds)
     meta_created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
@@ -28,7 +28,7 @@ CREATE TRIGGER IF NOT EXISTS project_meta_updated_at_trig AFTER UPDATE ON projec
 CREATE TRIGGER IF NOT EXISTS project_empty_name_trig AFTER INSERT ON project
     FOR EACH ROW WHEN coalesce(NEW.name, '') = ''
     BEGIN
-        UPDATE project SET name = NEW.id WHERE rowid = NEW.rowid;
+        UPDATE project SET name = NEW.id WHERE id = NEW.id; -- rowid = NEW.rowid;
     END;
 
 -- Transaction span table
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS span (
 
     -- Description is a longer description of the transaction
     -- Human-readable identifier, like "GET /category/1/product?id=2"
-    description TEXT,
+    memo TEXT,
 
     -- Created date (unixtime in seconds)
     meta_created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS breadcrumb (
     log_id INTEGER NOT NULL,
 
     -- req Value of the breadcrumb
-    value TEXT NOT NULL,
+    v TEXT NOT NULL,
 
     -- Foreign keys
     FOREIGN KEY (log_id)
@@ -181,7 +181,7 @@ CREATE TABLE IF NOT EXISTS search (
     word TEXT NOT NULL,
 
     -- req Word's length
-    length INTEGER NOT NULL,
+    len INTEGER NOT NULL,
 
     -- Composite primary key
     PRIMARY KEY (suffix, log_id, word),
@@ -196,4 +196,4 @@ CREATE TABLE IF NOT EXISTS search (
 -- Indexes
 CREATE INDEX IF NOT EXISTS search_suffix_idx ON search (suffix);
 CREATE INDEX IF NOT EXISTS search_log_id_idx ON search (log_id);
-CREATE INDEX IF NOT EXISTS search_length_idx ON search (length);
+CREATE INDEX IF NOT EXISTS search_len_idx ON search (len);
