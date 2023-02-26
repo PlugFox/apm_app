@@ -7,10 +7,18 @@ import 'src/common/util/error_util.dart';
 import 'src/common/util/logging.dart';
 import 'src/common/widget/app.dart';
 import 'src/common/widget/app_error.dart';
+import 'src/common/widget/radial_progress_indicator.dart';
 
 void main() => runZonedGuarded<void>(
       () async {
-        runApp(const Material(child: Center(child: CircularProgressIndicator())));
+        // Splash screen
+        runApp(
+          const Material(
+            child: Center(
+              child: RadialProgressIndicator(size: 256),
+            ),
+          ),
+        );
         try {
           // Logo and splash screen
           await $initializeApp();

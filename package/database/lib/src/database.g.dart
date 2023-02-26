@@ -2437,6 +2437,8 @@ abstract class _$Database extends GeneratedDatabase {
       'CREATE INDEX IF NOT EXISTS log_project_id_idx ON log (project_id)');
   late final Index logSpanIdIdx = Index('log_span_id_idx',
       'CREATE INDEX IF NOT EXISTS log_span_id_idx ON log (span_id)');
+  late final Index logNameIdx = Index(
+      'log_name_idx', 'CREATE INDEX IF NOT EXISTS log_name_idx ON log (name)');
   late final Index logTimeIdx = Index(
       'log_time_idx', 'CREATE INDEX IF NOT EXISTS log_time_idx ON log (time)');
   late final Index logLevelIdx = Index('log_level_idx',
@@ -2497,6 +2499,7 @@ abstract class _$Database extends GeneratedDatabase {
         log,
         logProjectIdIdx,
         logSpanIdIdx,
+        logNameIdx,
         logTimeIdx,
         logLevelIdx,
         logMetaCreatedAtIdx,

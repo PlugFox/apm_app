@@ -177,6 +177,9 @@ class Log extends ProjectEntity with Comparable<Log> {
     this.characteristics,
   });
 
+  /// Placeholder
+  Log.placeholder() : this(id: -1, projectId: 'app', event: 'Placeholder', timestamp: DateTime.now(), level: 0);
+
   /// Unique identifier of the log
   final LogID id;
 
@@ -211,11 +214,11 @@ class Log extends ProjectEntity with Comparable<Log> {
   /// Characteristics is a JSON Object associated with this log event
   final Map<String, Object?>? characteristics;
 
-  /// Is this log pinned?
-  bool get pinned => characteristics?['pinned'] == true;
-
   /// Is this log starred?
-  bool get starred => characteristics?['starred'] == true;
+  //bool get starred => characteristics?['starred'] == true;
+
+  /// Is this log pinned?
+  //final bool pinned;
 
   /// Extract lowercased words
   Set<String> extractWords() => _$extractWords(this);

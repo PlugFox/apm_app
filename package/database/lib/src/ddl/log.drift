@@ -109,6 +109,7 @@ CREATE TABLE IF NOT EXISTS log (
 -- Indexes
 CREATE INDEX IF NOT EXISTS log_project_id_idx ON log (project_id);
 CREATE INDEX IF NOT EXISTS log_span_id_idx ON log (span_id);
+CREATE INDEX IF NOT EXISTS log_name_idx ON log (name);
 CREATE INDEX IF NOT EXISTS log_time_idx ON log (time);
 CREATE INDEX IF NOT EXISTS log_level_idx ON log (level);
 

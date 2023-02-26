@@ -3,7 +3,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import '../../feature/home/widget/home_screen.dart';
+import '../../feature/logs/widget/logs_scope.dart';
+import '../../feature/logs/widget/logs_screen.dart';
 import '../localization/localization.dart';
 
 /// {@template app}
@@ -32,10 +33,12 @@ class _AppState extends State<App> {
           Localization.delegate,
         ],
         supportedLocales: Localization.supportedLocales,
-        home: const HomeScreen(),
+        home: const LogsScreen(),
         builder: (context, child) => MediaQuery(
           data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
-          child: child ?? const SizedBox.shrink(),
+          child: LogsScope(
+            child: child ?? const SizedBox.shrink(),
+          ),
         ),
       );
 }

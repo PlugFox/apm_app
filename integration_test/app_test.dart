@@ -1,6 +1,6 @@
 import 'package:app/src/common/initialization/initialization.dart';
 import 'package:app/src/common/widget/app.dart';
-import 'package:app/src/feature/home/widget/home_screen.dart';
+import 'package:app/src/feature/logs/widget/logs_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -26,7 +26,7 @@ void main() {
 
       // Check initial state.
       expect(find.byType(App), findsOneWidget);
-      expect(find.byType(HomeScreen), findsOneWidget);
+      expect(find.byType(LogsScreen), findsOneWidget);
       expect(find.text('Shop'), findsAtLeastNWidgets(1));
     });
   });

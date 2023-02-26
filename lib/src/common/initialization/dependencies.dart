@@ -2,6 +2,9 @@ import 'package:database/database.dart';
 import 'package:meta/meta.dart';
 import 'package:server/server.dart';
 
+import '../../feature/logs/data/logs_local_data_provider.dart';
+import '../../feature/logs/data/logs_repository.dart';
+
 /// Dependencies
 @sealed
 abstract class Dependencies {
@@ -12,4 +15,8 @@ abstract class Dependencies {
 
   /// Server
   static final Server server = Server();
+
+  /// Logs repository factory
+  static ILogsRepository get logsRepository =>
+      LogsRepositoryImpl(localDataProvider: LogsLocalDataProviderDatabaseImpl(database: database));
 }
