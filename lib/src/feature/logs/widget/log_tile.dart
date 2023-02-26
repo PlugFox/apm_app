@@ -29,7 +29,17 @@ class LogTile extends StatelessWidget {
         height: height,
         child: Row(
           children: <Widget>[
-            const Icon(Icons.info),
+            /* const IconButton(
+              icon: Icon(Icons.push_pin),
+              splashRadius: 24,
+              onPressed: null,
+            ), */
+            const IconButton(
+              icon: Icon(Icons.star_outline),
+              splashRadius: 24,
+              onPressed: null,
+            ),
+            const SizedBox(width: 8),
             Text(log.timestamp.toString()),
             Expanded(child: Text(log.event)),
             Text(log.level.toString()),

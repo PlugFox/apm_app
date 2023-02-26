@@ -37,6 +37,7 @@ class _AppState extends State<App> {
         builder: (context, child) => MediaQuery(
           data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
           child: LogsScope(
+            // TODO(plugfox): Drawer
             child: child ?? const SizedBox.shrink(),
           ),
         ),

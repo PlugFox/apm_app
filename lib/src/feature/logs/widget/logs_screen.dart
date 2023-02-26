@@ -71,6 +71,7 @@ class _LogsListState extends State<_LogsList> {
 
               // TODO: Add pinned list
 
+              // Main logs list
               SliverFixedExtentList(
                 itemExtent: LogTile.height,
                 delegate: SliverChildBuilderDelegate(
@@ -79,7 +80,7 @@ class _LogsListState extends State<_LogsList> {
                 ),
               ),
 
-              /// Proccessing
+              // Progress indicators
               if (controller.isProcessing)
                 SliverFixedExtentList(
                   itemExtent: LogTile.height,
