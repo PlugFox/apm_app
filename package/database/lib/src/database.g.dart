@@ -19,8 +19,8 @@ class Project extends Table with TableInfo<Project, ProjectData> {
       'name', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
-      $customConstraints: 'NOT NULL DEFAULT (id)',
-      defaultValue: const CustomExpression('id'));
+      $customConstraints: 'NOT NULL DEFAULT \'\'',
+      defaultValue: const CustomExpression('\'\''));
   static const VerificationMeta _descriptionMeta =
       const VerificationMeta('description');
   late final GeneratedColumn<String> description = GeneratedColumn<String>(
@@ -1132,6 +1132,725 @@ class LogCompanion extends UpdateCompanion<LogData> {
   }
 }
 
+class Tag extends Table with TableInfo<Tag, TagData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Tag(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL PRIMARY KEY AUTOINCREMENT');
+  static const VerificationMeta _logIdMeta = const VerificationMeta('logId');
+  late final GeneratedColumn<int> logId = GeneratedColumn<int>(
+      'log_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _kMeta = const VerificationMeta('k');
+  late final GeneratedColumn<String> k = GeneratedColumn<String>(
+      'k', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _vMeta = const VerificationMeta('v');
+  late final GeneratedColumn<String> v = GeneratedColumn<String>(
+      'v', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns => [id, logId, k, v];
+  @override
+  String get aliasedName => _alias ?? 'tag';
+  @override
+  String get actualTableName => 'tag';
+  @override
+  VerificationContext validateIntegrity(Insertable<TagData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('log_id')) {
+      context.handle(
+          _logIdMeta, logId.isAcceptableOrUnknown(data['log_id']!, _logIdMeta));
+    } else if (isInserting) {
+      context.missing(_logIdMeta);
+    }
+    if (data.containsKey('k')) {
+      context.handle(_kMeta, k.isAcceptableOrUnknown(data['k']!, _kMeta));
+    } else if (isInserting) {
+      context.missing(_kMeta);
+    }
+    if (data.containsKey('v')) {
+      context.handle(_vMeta, v.isAcceptableOrUnknown(data['v']!, _vMeta));
+    } else if (isInserting) {
+      context.missing(_vMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TagData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TagData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      logId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}log_id'])!,
+      k: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}k'])!,
+      v: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}v'])!,
+    );
+  }
+
+  @override
+  Tag createAlias(String alias) {
+    return Tag(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+  @override
+  List<String> get customConstraints => const [
+        'FOREIGN KEY(log_id)REFERENCES log(id)ON UPDATE CASCADE ON DELETE CASCADE'
+      ];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class TagData extends DataClass implements Insertable<TagData> {
+  final int id;
+  final int logId;
+  final String k;
+  final String v;
+  const TagData(
+      {required this.id,
+      required this.logId,
+      required this.k,
+      required this.v});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['log_id'] = Variable<int>(logId);
+    map['k'] = Variable<String>(k);
+    map['v'] = Variable<String>(v);
+    return map;
+  }
+
+  TagCompanion toCompanion(bool nullToAbsent) {
+    return TagCompanion(
+      id: Value(id),
+      logId: Value(logId),
+      k: Value(k),
+      v: Value(v),
+    );
+  }
+
+  factory TagData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TagData(
+      id: serializer.fromJson<int>(json['id']),
+      logId: serializer.fromJson<int>(json['log_id']),
+      k: serializer.fromJson<String>(json['k']),
+      v: serializer.fromJson<String>(json['v']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'log_id': serializer.toJson<int>(logId),
+      'k': serializer.toJson<String>(k),
+      'v': serializer.toJson<String>(v),
+    };
+  }
+
+  TagData copyWith({int? id, int? logId, String? k, String? v}) => TagData(
+        id: id ?? this.id,
+        logId: logId ?? this.logId,
+        k: k ?? this.k,
+        v: v ?? this.v,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('TagData(')
+          ..write('id: $id, ')
+          ..write('logId: $logId, ')
+          ..write('k: $k, ')
+          ..write('v: $v')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, logId, k, v);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TagData &&
+          other.id == this.id &&
+          other.logId == this.logId &&
+          other.k == this.k &&
+          other.v == this.v);
+}
+
+class TagCompanion extends UpdateCompanion<TagData> {
+  final Value<int> id;
+  final Value<int> logId;
+  final Value<String> k;
+  final Value<String> v;
+  const TagCompanion({
+    this.id = const Value.absent(),
+    this.logId = const Value.absent(),
+    this.k = const Value.absent(),
+    this.v = const Value.absent(),
+  });
+  TagCompanion.insert({
+    this.id = const Value.absent(),
+    required int logId,
+    required String k,
+    required String v,
+  })  : logId = Value(logId),
+        k = Value(k),
+        v = Value(v);
+  static Insertable<TagData> custom({
+    Expression<int>? id,
+    Expression<int>? logId,
+    Expression<String>? k,
+    Expression<String>? v,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (logId != null) 'log_id': logId,
+      if (k != null) 'k': k,
+      if (v != null) 'v': v,
+    });
+  }
+
+  TagCompanion copyWith(
+      {Value<int>? id, Value<int>? logId, Value<String>? k, Value<String>? v}) {
+    return TagCompanion(
+      id: id ?? this.id,
+      logId: logId ?? this.logId,
+      k: k ?? this.k,
+      v: v ?? this.v,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (logId.present) {
+      map['log_id'] = Variable<int>(logId.value);
+    }
+    if (k.present) {
+      map['k'] = Variable<String>(k.value);
+    }
+    if (v.present) {
+      map['v'] = Variable<String>(v.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TagCompanion(')
+          ..write('id: $id, ')
+          ..write('logId: $logId, ')
+          ..write('k: $k, ')
+          ..write('v: $v')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class Breadcrumb extends Table with TableInfo<Breadcrumb, BreadcrumbData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Breadcrumb(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL PRIMARY KEY AUTOINCREMENT');
+  static const VerificationMeta _logIdMeta = const VerificationMeta('logId');
+  late final GeneratedColumn<int> logId = GeneratedColumn<int>(
+      'log_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
+      'value', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns => [id, logId, value];
+  @override
+  String get aliasedName => _alias ?? 'breadcrumb';
+  @override
+  String get actualTableName => 'breadcrumb';
+  @override
+  VerificationContext validateIntegrity(Insertable<BreadcrumbData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('log_id')) {
+      context.handle(
+          _logIdMeta, logId.isAcceptableOrUnknown(data['log_id']!, _logIdMeta));
+    } else if (isInserting) {
+      context.missing(_logIdMeta);
+    }
+    if (data.containsKey('value')) {
+      context.handle(
+          _valueMeta, value.isAcceptableOrUnknown(data['value']!, _valueMeta));
+    } else if (isInserting) {
+      context.missing(_valueMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  BreadcrumbData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BreadcrumbData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      logId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}log_id'])!,
+      value: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}value'])!,
+    );
+  }
+
+  @override
+  Breadcrumb createAlias(String alias) {
+    return Breadcrumb(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+  @override
+  List<String> get customConstraints => const [
+        'FOREIGN KEY(log_id)REFERENCES log(id)ON UPDATE CASCADE ON DELETE CASCADE'
+      ];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class BreadcrumbData extends DataClass implements Insertable<BreadcrumbData> {
+  final int id;
+  final int logId;
+  final String value;
+  const BreadcrumbData(
+      {required this.id, required this.logId, required this.value});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['log_id'] = Variable<int>(logId);
+    map['value'] = Variable<String>(value);
+    return map;
+  }
+
+  BreadcrumbCompanion toCompanion(bool nullToAbsent) {
+    return BreadcrumbCompanion(
+      id: Value(id),
+      logId: Value(logId),
+      value: Value(value),
+    );
+  }
+
+  factory BreadcrumbData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BreadcrumbData(
+      id: serializer.fromJson<int>(json['id']),
+      logId: serializer.fromJson<int>(json['log_id']),
+      value: serializer.fromJson<String>(json['value']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'log_id': serializer.toJson<int>(logId),
+      'value': serializer.toJson<String>(value),
+    };
+  }
+
+  BreadcrumbData copyWith({int? id, int? logId, String? value}) =>
+      BreadcrumbData(
+        id: id ?? this.id,
+        logId: logId ?? this.logId,
+        value: value ?? this.value,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('BreadcrumbData(')
+          ..write('id: $id, ')
+          ..write('logId: $logId, ')
+          ..write('value: $value')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, logId, value);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BreadcrumbData &&
+          other.id == this.id &&
+          other.logId == this.logId &&
+          other.value == this.value);
+}
+
+class BreadcrumbCompanion extends UpdateCompanion<BreadcrumbData> {
+  final Value<int> id;
+  final Value<int> logId;
+  final Value<String> value;
+  const BreadcrumbCompanion({
+    this.id = const Value.absent(),
+    this.logId = const Value.absent(),
+    this.value = const Value.absent(),
+  });
+  BreadcrumbCompanion.insert({
+    this.id = const Value.absent(),
+    required int logId,
+    required String value,
+  })  : logId = Value(logId),
+        value = Value(value);
+  static Insertable<BreadcrumbData> custom({
+    Expression<int>? id,
+    Expression<int>? logId,
+    Expression<String>? value,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (logId != null) 'log_id': logId,
+      if (value != null) 'value': value,
+    });
+  }
+
+  BreadcrumbCompanion copyWith(
+      {Value<int>? id, Value<int>? logId, Value<String>? value}) {
+    return BreadcrumbCompanion(
+      id: id ?? this.id,
+      logId: logId ?? this.logId,
+      value: value ?? this.value,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (logId.present) {
+      map['log_id'] = Variable<int>(logId.value);
+    }
+    if (value.present) {
+      map['value'] = Variable<String>(value.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BreadcrumbCompanion(')
+          ..write('id: $id, ')
+          ..write('logId: $logId, ')
+          ..write('value: $value')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class Search extends Table with TableInfo<Search, SearchData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Search(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _suffixMeta = const VerificationMeta('suffix');
+  late final GeneratedColumn<String> suffix = GeneratedColumn<String>(
+      'suffix', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _logIdMeta = const VerificationMeta('logId');
+  late final GeneratedColumn<int> logId = GeneratedColumn<int>(
+      'log_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _wordMeta = const VerificationMeta('word');
+  late final GeneratedColumn<String> word = GeneratedColumn<String>(
+      'word', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _lengthMeta = const VerificationMeta('length');
+  late final GeneratedColumn<int> length = GeneratedColumn<int>(
+      'length', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns => [suffix, logId, word, length];
+  @override
+  String get aliasedName => _alias ?? 'search';
+  @override
+  String get actualTableName => 'search';
+  @override
+  VerificationContext validateIntegrity(Insertable<SearchData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('suffix')) {
+      context.handle(_suffixMeta,
+          suffix.isAcceptableOrUnknown(data['suffix']!, _suffixMeta));
+    } else if (isInserting) {
+      context.missing(_suffixMeta);
+    }
+    if (data.containsKey('log_id')) {
+      context.handle(
+          _logIdMeta, logId.isAcceptableOrUnknown(data['log_id']!, _logIdMeta));
+    } else if (isInserting) {
+      context.missing(_logIdMeta);
+    }
+    if (data.containsKey('word')) {
+      context.handle(
+          _wordMeta, word.isAcceptableOrUnknown(data['word']!, _wordMeta));
+    } else if (isInserting) {
+      context.missing(_wordMeta);
+    }
+    if (data.containsKey('length')) {
+      context.handle(_lengthMeta,
+          length.isAcceptableOrUnknown(data['length']!, _lengthMeta));
+    } else if (isInserting) {
+      context.missing(_lengthMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {suffix, logId, word};
+  @override
+  SearchData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SearchData(
+      suffix: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}suffix'])!,
+      logId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}log_id'])!,
+      word: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}word'])!,
+      length: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}length'])!,
+    );
+  }
+
+  @override
+  Search createAlias(String alias) {
+    return Search(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+  @override
+  List<String> get customConstraints => const [
+        'PRIMARY KEY(suffix, log_id, word)',
+        'FOREIGN KEY(log_id)REFERENCES log(id)ON UPDATE CASCADE ON DELETE CASCADE'
+      ];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class SearchData extends DataClass implements Insertable<SearchData> {
+  final String suffix;
+  final int logId;
+  final String word;
+  final int length;
+  const SearchData(
+      {required this.suffix,
+      required this.logId,
+      required this.word,
+      required this.length});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['suffix'] = Variable<String>(suffix);
+    map['log_id'] = Variable<int>(logId);
+    map['word'] = Variable<String>(word);
+    map['length'] = Variable<int>(length);
+    return map;
+  }
+
+  SearchCompanion toCompanion(bool nullToAbsent) {
+    return SearchCompanion(
+      suffix: Value(suffix),
+      logId: Value(logId),
+      word: Value(word),
+      length: Value(length),
+    );
+  }
+
+  factory SearchData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SearchData(
+      suffix: serializer.fromJson<String>(json['suffix']),
+      logId: serializer.fromJson<int>(json['log_id']),
+      word: serializer.fromJson<String>(json['word']),
+      length: serializer.fromJson<int>(json['length']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'suffix': serializer.toJson<String>(suffix),
+      'log_id': serializer.toJson<int>(logId),
+      'word': serializer.toJson<String>(word),
+      'length': serializer.toJson<int>(length),
+    };
+  }
+
+  SearchData copyWith(
+          {String? suffix, int? logId, String? word, int? length}) =>
+      SearchData(
+        suffix: suffix ?? this.suffix,
+        logId: logId ?? this.logId,
+        word: word ?? this.word,
+        length: length ?? this.length,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('SearchData(')
+          ..write('suffix: $suffix, ')
+          ..write('logId: $logId, ')
+          ..write('word: $word, ')
+          ..write('length: $length')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(suffix, logId, word, length);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SearchData &&
+          other.suffix == this.suffix &&
+          other.logId == this.logId &&
+          other.word == this.word &&
+          other.length == this.length);
+}
+
+class SearchCompanion extends UpdateCompanion<SearchData> {
+  final Value<String> suffix;
+  final Value<int> logId;
+  final Value<String> word;
+  final Value<int> length;
+  const SearchCompanion({
+    this.suffix = const Value.absent(),
+    this.logId = const Value.absent(),
+    this.word = const Value.absent(),
+    this.length = const Value.absent(),
+  });
+  SearchCompanion.insert({
+    required String suffix,
+    required int logId,
+    required String word,
+    required int length,
+  })  : suffix = Value(suffix),
+        logId = Value(logId),
+        word = Value(word),
+        length = Value(length);
+  static Insertable<SearchData> custom({
+    Expression<String>? suffix,
+    Expression<int>? logId,
+    Expression<String>? word,
+    Expression<int>? length,
+  }) {
+    return RawValuesInsertable({
+      if (suffix != null) 'suffix': suffix,
+      if (logId != null) 'log_id': logId,
+      if (word != null) 'word': word,
+      if (length != null) 'length': length,
+    });
+  }
+
+  SearchCompanion copyWith(
+      {Value<String>? suffix,
+      Value<int>? logId,
+      Value<String>? word,
+      Value<int>? length}) {
+    return SearchCompanion(
+      suffix: suffix ?? this.suffix,
+      logId: logId ?? this.logId,
+      word: word ?? this.word,
+      length: length ?? this.length,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (suffix.present) {
+      map['suffix'] = Variable<String>(suffix.value);
+    }
+    if (logId.present) {
+      map['log_id'] = Variable<int>(logId.value);
+    }
+    if (word.present) {
+      map['word'] = Variable<String>(word.value);
+    }
+    if (length.present) {
+      map['length'] = Variable<int>(length.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SearchCompanion(')
+          ..write('suffix: $suffix, ')
+          ..write('logId: $logId, ')
+          ..write('word: $word, ')
+          ..write('length: $length')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class Kv extends Table with TableInfo<Kv, KvData> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -1400,6 +2119,9 @@ abstract class _$Database extends GeneratedDatabase {
   late final Trigger projectMetaUpdatedAtTrig = Trigger(
       'CREATE TRIGGER IF NOT EXISTS project_meta_updated_at_trig AFTER UPDATE ON project BEGIN UPDATE project SET meta_updated_at = strftime(\'%s\', \'now\') WHERE id = NEW.id;END',
       'project_meta_updated_at_trig');
+  late final Trigger projectEmptyNameTrig = Trigger(
+      'CREATE TRIGGER IF NOT EXISTS project_empty_name_trig AFTER INSERT ON project WHEN coalesce(NEW.name, \'\') = \'\' BEGIN UPDATE project SET name = NEW.id WHERE "rowid" = NEW."rowid";END',
+      'project_empty_name_trig');
   late final Span span = Span(this);
   late final Index spanProjectIdIdx = Index('span_project_id_idx',
       'CREATE INDEX IF NOT EXISTS span_project_id_idx ON span (project_id)');
@@ -1428,6 +2150,23 @@ abstract class _$Database extends GeneratedDatabase {
   late final Trigger logMetaUpdatedAtTrig = Trigger(
       'CREATE TRIGGER IF NOT EXISTS log_meta_updated_at_trig AFTER UPDATE ON log BEGIN UPDATE log SET meta_updated_at = strftime(\'%s\', \'now\') WHERE id = NEW.id;END',
       'log_meta_updated_at_trig');
+  late final Tag tag = Tag(this);
+  late final Index tagLogIdIdx = Index('tag_log_id_idx',
+      'CREATE INDEX IF NOT EXISTS tag_log_id_idx ON tag (log_id)');
+  late final Index tagKIdx =
+      Index('tag_k_idx', 'CREATE INDEX IF NOT EXISTS tag_k_idx ON tag (k)');
+  late final Index tagVIdx =
+      Index('tag_v_idx', 'CREATE INDEX IF NOT EXISTS tag_v_idx ON tag (v)');
+  late final Breadcrumb breadcrumb = Breadcrumb(this);
+  late final Index breadcrumbLogIdIdx = Index('breadcrumb_log_id_idx',
+      'CREATE INDEX IF NOT EXISTS breadcrumb_log_id_idx ON breadcrumb (log_id)');
+  late final Search search = Search(this);
+  late final Index searchSuffixIdx = Index('search_suffix_idx',
+      'CREATE INDEX IF NOT EXISTS search_suffix_idx ON search (suffix)');
+  late final Index searchLogIdIdx = Index('search_log_id_idx',
+      'CREATE INDEX IF NOT EXISTS search_log_id_idx ON search (log_id)');
+  late final Index searchLengthIdx = Index('search_length_idx',
+      'CREATE INDEX IF NOT EXISTS search_length_idx ON search (length)');
   late final Kv kv = Kv(this);
   late final Index kvMetaCreatedAtIdx = Index('kv_meta_created_at_idx',
       'CREATE INDEX IF NOT EXISTS kv_meta_created_at_idx ON kv (meta_created_at)');
@@ -1446,6 +2185,7 @@ abstract class _$Database extends GeneratedDatabase {
         projectMetaCreatedAtIdx,
         projectMetaUpdatedAtIdx,
         projectMetaUpdatedAtTrig,
+        projectEmptyNameTrig,
         span,
         spanProjectIdIdx,
         spanOperationIdx,
@@ -1460,6 +2200,16 @@ abstract class _$Database extends GeneratedDatabase {
         logMetaCreatedAtIdx,
         logMetaUpdatedAtIdx,
         logMetaUpdatedAtTrig,
+        tag,
+        tagLogIdIdx,
+        tagKIdx,
+        tagVIdx,
+        breadcrumb,
+        breadcrumbLogIdIdx,
+        search,
+        searchSuffixIdx,
+        searchLogIdIdx,
+        searchLengthIdx,
         kv,
         kvMetaCreatedAtIdx,
         kvMetaUpdatedAtIdx,
@@ -1471,6 +2221,13 @@ abstract class _$Database extends GeneratedDatabase {
           WritePropagation(
             on: TableUpdateQuery.onTableName('project',
                 limitUpdateKind: UpdateKind.update),
+            result: [
+              TableUpdate('project', kind: UpdateKind.update),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('project',
+                limitUpdateKind: UpdateKind.insert),
             result: [
               TableUpdate('project', kind: UpdateKind.update),
             ],
@@ -1529,6 +2286,48 @@ abstract class _$Database extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.update),
             result: [
               TableUpdate('log', kind: UpdateKind.update),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('log',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('tag', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('log',
+                limitUpdateKind: UpdateKind.update),
+            result: [
+              TableUpdate('tag', kind: UpdateKind.update),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('log',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('breadcrumb', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('log',
+                limitUpdateKind: UpdateKind.update),
+            result: [
+              TableUpdate('breadcrumb', kind: UpdateKind.update),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('log',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('search', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('log',
+                limitUpdateKind: UpdateKind.update),
+            result: [
+              TableUpdate('search', kind: UpdateKind.update),
             ],
           ),
           WritePropagation(

@@ -72,6 +72,9 @@ class Database extends _$Database
           ),
         );
 
+  /// Creates a database from an existing [executor].
+  Database.connect(super.connection);
+
   static Future<QueryExecutor> _opener({
     io.File? path,
     ffi.DatabaseSetup? setup,

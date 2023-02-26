@@ -30,6 +30,8 @@ dependencies:
     path: package/database
   server:
     path: package/server
+  entity:
+    path: package/entity
 
 
 dev_dependencies:

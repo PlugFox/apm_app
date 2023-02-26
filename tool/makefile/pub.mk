@@ -15,7 +15,6 @@ get:
 codegen: get format
 	@fvm flutter pub run build_runner build --delete-conflicting-outputs
 	@dart pub global run intl_utils:generate
-	@protoc --dart_out=grpc:lib/src/common/model/generated -Iprotos protos/apm.proto
 
 upgrade:
 	@fvm flutter pub upgrade

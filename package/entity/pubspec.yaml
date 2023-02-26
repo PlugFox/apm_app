@@ -1,0 +1,17 @@
+name: entity
+description: Entity
+version: 0.0.1
+
+publish_to: "none"
+
+environment:
+  sdk: '>=2.19.2 <4.0.0'
+
+dependencies:
+  meta: ^1.7.0
+
+dev_dependencies:
+  test: any
+  build_runner: ^2.3.3
+  lint: ^2.0.1
+  file: ^6.1.4

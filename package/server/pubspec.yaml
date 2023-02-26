@@ -21,6 +21,10 @@ dependencies:
   shelf_web_socket: any
   web_socket_channel: any
 
+  # Entities
+  entity:
+    path: ../entity
+
 dev_dependencies:
   test: any
   build_runner: ^2.3.3

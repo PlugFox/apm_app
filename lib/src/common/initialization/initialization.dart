@@ -1,9 +1,13 @@
 import 'dart:async';
 
+import 'package:database/database.dart' as db;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:server/server.dart' as srv;
 
 import '../util/error_util.dart';
+import 'dependencies.dart';
+import 'handler.dart';
 
 Future<void>? _$initializeApp;
 
@@ -23,6 +27,8 @@ FutureOr<void> $initializeApp({
             DeviceOrientation.portraitDown,
           ]); */
           await _catchExceptions();
+          await Dependencies.database.refresh();
+          await _$startServer();
           /* Analytics.logAppOpen();
           Analytics.logInitialized(elapsedMilliseconds: stopwatch.elapsedMilliseconds); */
         }
@@ -74,3 +80,12 @@ Future<void> _catchExceptions() async {
     ErrorUtil.logError(error, stackTrace).ignore();
   }
 }
+
+Future<void> _$startServer() => Dependencies.database.serializableConnection().then<void>(
+      (connection) => Dependencies.server.start(
+        options: srv.ServerOptions(
+          payload: connection,
+          handler: $handler,
+        ),
+      ),
+    );

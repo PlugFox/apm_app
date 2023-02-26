@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS project (
     -- req Project ID
     id TEXT NOT NULL PRIMARY KEY,
     -- req Name
-    name TEXT NOT NULL DEFAULT (id),
+    name TEXT NOT NULL DEFAULT (''),
 
     -- Description
     description TEXT,
@@ -23,6 +23,12 @@ CREATE INDEX IF NOT EXISTS project_meta_updated_at_idx ON project (meta_updated_
 CREATE TRIGGER IF NOT EXISTS project_meta_updated_at_trig AFTER UPDATE ON project
     BEGIN
         UPDATE project SET meta_updated_at = strftime('%s', 'now') WHERE id = NEW.id;
+    END;
+
+CREATE TRIGGER IF NOT EXISTS project_empty_name_trig AFTER INSERT ON project
+    FOR EACH ROW WHEN coalesce(NEW.name, '') = ''
+    BEGIN
+        UPDATE project SET name = NEW.id WHERE rowid = NEW.rowid;
     END;
 
 -- Transaction span table
@@ -78,7 +84,7 @@ CREATE TABLE IF NOT EXISTS log (
     time INTEGER NOT NULL,
     -- Name is the name of the source of the log message
     name TEXT,
-    -- Level is the severity level (a value between 0 and 2000);
+    -- Level is the severity level (a value between 0 and 2000)
     level INTEGER NOT NULL,
     -- StackTrace a stack trace associated with this log event
     stack TEXT,
@@ -113,3 +119,81 @@ CREATE TRIGGER IF NOT EXISTS log_meta_updated_at_trig AFTER UPDATE ON log
     BEGIN
         UPDATE log SET meta_updated_at = strftime('%s', 'now') WHERE id = NEW.id;
     END;
+
+-- Tags table
+CREATE TABLE IF NOT EXISTS tag (
+    -- req Unique identifier of the tag
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+
+    -- req Unique identifier of the log
+    log_id INTEGER NOT NULL,
+
+    -- req Tag's key
+    k TEXT NOT NULL,
+
+    -- req Tag's value
+    v TEXT NOT NULL,
+
+    -- Foreign keys
+    FOREIGN KEY (log_id)
+        REFERENCES log (id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
+) STRICT;
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS tag_log_id_idx ON tag (log_id);
+CREATE INDEX IF NOT EXISTS tag_k_idx ON tag (k);
+CREATE INDEX IF NOT EXISTS tag_v_idx ON tag (v);
+
+-- Breadcrumbs table
+CREATE TABLE IF NOT EXISTS breadcrumb (
+    -- req Unique identifier of the breadcrumb
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+
+    -- req Unique identifier of the log
+    log_id INTEGER NOT NULL,
+
+    -- req Value of the breadcrumb
+    value TEXT NOT NULL,
+
+    -- Foreign keys
+    FOREIGN KEY (log_id)
+        REFERENCES log (id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
+) STRICT;
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS breadcrumb_log_id_idx ON breadcrumb (log_id);
+
+/* SEARCH SECTION */
+
+-- Search table
+CREATE TABLE IF NOT EXISTS search (
+    -- req Suffix (first 3 chars of word, lowercased)
+    suffix TEXT NOT NULL, -- CHECK(length(suffix) = 3)
+
+    -- req Unique identifier
+    log_id INTEGER NOT NULL,
+
+    -- req Word (3 or more chars, lowercased)
+    word TEXT NOT NULL,
+
+    -- req Word's length
+    length INTEGER NOT NULL,
+
+    -- Composite primary key
+    PRIMARY KEY (suffix, log_id, word),
+
+    -- Foreign keys
+    FOREIGN KEY (log_id)
+        REFERENCES log (id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
+) STRICT;
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS search_suffix_idx ON search (suffix);
+CREATE INDEX IF NOT EXISTS search_log_id_idx ON search (log_id);
+CREATE INDEX IF NOT EXISTS search_length_idx ON search (length);
