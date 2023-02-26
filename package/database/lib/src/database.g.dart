@@ -2154,7 +2154,8 @@ class Kv extends Table with TableInfo<Kv, KvData> {
       'v', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
+      $customConstraints:
+          'NOT NULL CHECK (length(data) > 2 AND json_valid(data))');
   static const VerificationMeta _metaCreatedAtMeta =
       const VerificationMeta('metaCreatedAt');
   late final GeneratedColumn<int> metaCreatedAt = GeneratedColumn<int>(
