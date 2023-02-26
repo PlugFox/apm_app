@@ -1,6 +1,6 @@
-import 'package:app/src/common/model/generated/apm.pb.dart' as generated;
-import 'package:app/src/common/model/message.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:server/src/generated/apm.pb.dart' as generated;
+import 'package:server/src/message.dart';
+import 'package:test/test.dart';
 
 void main() => group('message', () {
       test('convert_log', () {
@@ -26,12 +26,13 @@ void main() => group('message', () {
         );
         final bytes = $messagesCodec.encode(log);
         expect(
-            $messagesCodec.decode(bytes),
-            isA<generated.Log>().having(
-              (l) => l.level,
-              'log.level',
-              equals(level),
-            ));
+          $messagesCodec.decode(bytes),
+          isA<generated.Log>().having(
+            (l) => l.level,
+            'log.level',
+            equals(level),
+          ),
+        );
       });
 
       test('convert_transaction', () {
@@ -48,11 +49,12 @@ void main() => group('message', () {
         final bytes = $messagesCodec.encode(transaction);
         final result = $messagesCodec.decode(bytes);
         expect(
-            result,
-            isA<generated.Transaction>().having(
-              (t) => t.id,
-              'transaction.id',
-              equals(id),
-            ));
+          result,
+          isA<generated.Transaction>().having(
+            (t) => t.id,
+            'transaction.id',
+            equals(id),
+          ),
+        );
       });
     });

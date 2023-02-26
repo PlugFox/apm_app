@@ -24,13 +24,12 @@ dependencies:
   collection: any
   async: any
   meta: any
-  crypto: ^3.0.2
-  protobuf: ^2.1.0
 
-  # Web server
-  shelf: any
-  shelf_web_socket: any
-  web_socket_channel: any
+  # Packages
+  database:
+    path: package/database
+  server:
+    path: package/server
 
 
 dev_dependencies:

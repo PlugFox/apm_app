@@ -4,9 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import '../util/error_util.dart';
-import 'platform/platform_initialization.dart';
 
 Future<void>? _$initializeApp;
+
+/// Initializes the app and prepares it for use.
 FutureOr<void> $initializeApp({
   Future<void> Function()? onSuccess,
   Future<void> Function(Object error, StackTrace stackTrace)? onError,
@@ -22,7 +23,6 @@ FutureOr<void> $initializeApp({
             DeviceOrientation.portraitDown,
           ]); */
           await _catchExceptions();
-          platformInitialization().ignore();
           /* Analytics.logAppOpen();
           Analytics.logInitialized(elapsedMilliseconds: stopwatch.elapsedMilliseconds); */
         }
@@ -41,6 +41,11 @@ FutureOr<void> $initializeApp({
       }
     });
 
+/// Resets the app to its initial state.
+@visibleForTesting
+Future<void> $resetApp() async {}
+
+/// Disposes the app and releases all resources.
 @visibleForTesting
 Future<void> $disposeApp() async {}
 

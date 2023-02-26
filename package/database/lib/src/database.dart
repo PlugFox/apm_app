@@ -11,9 +11,11 @@ import 'queries.dart';
 
 part 'database.g.dart';
 
+/// Drop database on start
 /// --dart-define=DROP_DATABASE=true
 const _kDropTables = bool.fromEnvironment('DROP_DATABASE');
 
+/// Database file name by default
 const String _kDatabaseFileName = 'db.sqlite';
 
 /// Key-value storage interface for SQLite database
@@ -36,6 +38,7 @@ abstract class IKeyValueStorage {
 @DriftDatabase(
   include: <String>{
     'ddl/kv.drift',
+    'ddl/log.drift',
   },
   tables: <Type>[],
   daos: <Type>[],
@@ -53,36 +56,55 @@ class Database extends _$Database
   /// the database is opened, before moor is fully ready. This can be used to
   /// add custom user-defined sql functions or to provide encryption keys in
   /// SQLCipher implementations.
-  Database.mobile({
+  Database.lazy({
     io.File? path,
     ffi.DatabaseSetup? setup,
     bool logStatements = false,
+    bool dropDatabase = false,
   }) : super(
-          LazyDatabase(() async {
-            io.File file;
-            if (path == null) {
-              final dbFolder = await pp.getApplicationDocumentsDirectory();
-              file = io.File(p.join(dbFolder.path, _kDatabaseFileName));
-            } else {
-              file = path;
-            }
-            try {
-              if (_kDropTables && file.existsSync()) {
-                file.deleteSync();
-              }
-            } on Object {
-              log("Can't delete database file: $file");
-              rethrow;
-            }
-            return Future<QueryExecutor>.value(
-              ffi.NativeDatabase(
-                file,
-                logStatements: logStatements,
-                setup: setup,
-              ),
-            );
-          }),
+          LazyDatabase(
+            () => _opener(
+              path: path,
+              setup: setup,
+              logStatements: logStatements,
+              dropDatabase: dropDatabase,
+            ),
+          ),
         );
+
+  static Future<QueryExecutor> _opener({
+    io.File? path,
+    ffi.DatabaseSetup? setup,
+    bool logStatements = false,
+    bool dropDatabase = false,
+  }) async {
+    io.File file;
+    if (path == null) {
+      final dbFolder = await pp.getApplicationDocumentsDirectory();
+      file = io.File(p.join(dbFolder.path, _kDatabaseFileName));
+    } else {
+      file = path;
+    }
+    try {
+      if ((dropDatabase || _kDropTables) && file.existsSync()) {
+        await file.delete();
+      }
+    } on Object catch (e, st) {
+      log(
+        "Can't delete database file: $file",
+        level: 900,
+        name: 'database',
+        error: e,
+        stackTrace: st,
+      );
+      rethrow;
+    }
+    return ffi.NativeDatabase.createInBackground(
+      file,
+      logStatements: logStatements,
+      setup: setup,
+    );
+  }
 
   /// Creates an in-memory database won't persist its changes on disk.
   ///

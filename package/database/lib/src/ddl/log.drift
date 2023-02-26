@@ -1,0 +1,115 @@
+-- Project table
+CREATE TABLE IF NOT EXISTS project (
+    -- req Project ID
+    id TEXT NOT NULL PRIMARY KEY,
+    -- req Name
+    name TEXT NOT NULL DEFAULT (id),
+
+    -- Description
+    description TEXT,
+
+    -- Created date (unixtime in seconds)
+    meta_created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    -- Updated date (unixtime in seconds)
+    meta_updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')) CHECK(meta_updated_at >= meta_created_at)
+) STRICT;
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS project_name_idx ON project (name);
+
+CREATE INDEX IF NOT EXISTS project_meta_created_at_idx ON project (meta_created_at);
+CREATE INDEX IF NOT EXISTS project_meta_updated_at_idx ON project (meta_updated_at);
+
+CREATE TRIGGER IF NOT EXISTS project_meta_updated_at_trig AFTER UPDATE ON project
+    BEGIN
+        UPDATE project SET meta_updated_at = strftime('%s', 'now') WHERE id = NEW.id;
+    END;
+
+-- Transaction span table
+CREATE TABLE IF NOT EXISTS span (
+    -- req Unique identifier of the transaction
+    id TEXT NOT NULL PRIMARY KEY,
+    -- req Project identifies the project that the transaction belongs to
+    project_id TEXT NOT NULL,
+    -- req Short description of transaction type, like "pageload"
+    operation TEXT NOT NULL,
+
+    -- Description is a longer description of the transaction
+    -- Human-readable identifier, like "GET /category/1/product?id=2"
+    description TEXT,
+
+    -- Created date (unixtime in seconds)
+    meta_created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    -- Updated date (unixtime in seconds)
+    meta_updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')) CHECK(meta_updated_at >= meta_created_at),
+
+    -- Foreign keys
+    FOREIGN KEY (project_id)
+        REFERENCES project (id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
+) STRICT;
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS span_project_id_idx ON span (project_id);
+CREATE INDEX IF NOT EXISTS span_operation_idx ON span (operation);
+
+CREATE INDEX IF NOT EXISTS span_meta_created_at_idx ON span (meta_created_at);
+CREATE INDEX IF NOT EXISTS span_meta_updated_at_idx ON span (meta_updated_at);
+
+CREATE TRIGGER IF NOT EXISTS span_meta_updated_at_trig AFTER UPDATE ON span
+    BEGIN
+        UPDATE span SET meta_updated_at = strftime('%s', 'now') WHERE id = NEW.id;
+    END;
+
+-- Logs table
+CREATE TABLE IF NOT EXISTS log (
+    -- req Unique identifier of the log
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    -- req Project identifies the project that the transaction belongs to
+    project_id TEXT NOT NULL,
+    -- Span is the transaction id of the log message
+    span_id TEXT,
+
+    -- req Message is the log message or error associated with this log event
+    event TEXT NOT NULL,
+
+    -- Time is the timestamp (in seconds) of the log message
+    time INTEGER NOT NULL,
+    -- Name is the name of the source of the log message
+    name TEXT,
+    -- Level is the severity level (a value between 0 and 2000);
+    level INTEGER NOT NULL,
+    -- StackTrace a stack trace associated with this log event
+    stack TEXT,
+
+    -- req Created date (unixtime in seconds)
+    meta_created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+    -- req Updated date (unixtime in seconds)
+    meta_updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')) CHECK(meta_updated_at >= meta_created_at),
+
+    -- Foreign keys
+    FOREIGN KEY (project_id)
+        REFERENCES project (id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE,
+
+    FOREIGN KEY (span_id)
+        REFERENCES span (id)
+            ON UPDATE CASCADE
+            ON DELETE SET NULL
+) STRICT;
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS log_project_id_idx ON log (project_id);
+CREATE INDEX IF NOT EXISTS log_span_id_idx ON log (span_id);
+CREATE INDEX IF NOT EXISTS log_time_idx ON log (time);
+CREATE INDEX IF NOT EXISTS log_level_idx ON log (level);
+
+CREATE INDEX IF NOT EXISTS log_meta_created_at_idx ON log (meta_created_at);
+CREATE INDEX IF NOT EXISTS log_meta_updated_at_idx ON log (meta_updated_at);
+
+CREATE TRIGGER IF NOT EXISTS log_meta_updated_at_trig AFTER UPDATE ON log
+    BEGIN
+        UPDATE log SET meta_updated_at = strftime('%s', 'now') WHERE id = NEW.id;
+    END;
