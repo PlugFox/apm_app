@@ -12,8 +12,8 @@ Future<void> _desktopInitialization() async {
   // Must add this line.
   await windowManager.ensureInitialized();
   const windowOptions = WindowOptions(
-    minimumSize: Size(800, 600),
-    size: Size(800, 600),
+    minimumSize: Size(300, 400),
+    size: Size(800, 800),
     center: true,
     backgroundColor: Colors.transparent,
     skipTaskbar: false,

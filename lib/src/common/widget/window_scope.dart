@@ -26,7 +26,9 @@ class WindowScope extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             const _WindowTitle(),
-            Expanded(child: child),
+            Expanded(
+              child: child,
+            ),
           ],
         );
 }
@@ -74,13 +76,36 @@ class _WindowTitleState extends State<_WindowTitle> with WindowListener {
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                Center(
-                  child: Text(
-                    'Application Performance Monitoring',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(height: 1),
-                  ),
+                Builder(
+                  builder: (context) {
+                    final size = MediaQuery.of(context).size;
+                    return AnimatedPositioned(
+                      duration: const Duration(milliseconds: 350),
+                      left: size.width < 800 ? 8 : 78,
+                      right: 78,
+                      top: 0,
+                      bottom: 0,
+                      child: Center(
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 250),
+                          transitionBuilder: (child, animation) => FadeTransition(
+                            opacity: animation,
+                            child: ScaleTransition(
+                              scale: animation,
+                              child: child,
+                            ),
+                          ),
+                          child: Text(
+                            key: ValueKey<bool>(size.width < 400),
+                            size.width < 400 ? 'APM' : 'Application Performance Monitoring',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(height: 1),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 _WindowButtons$Windows(isFullScreen: _isFullScreen),
               ],

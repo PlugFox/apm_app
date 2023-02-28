@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
@@ -12,13 +13,7 @@ import 'src/common/widget/radial_progress_indicator.dart';
 void main() => runZonedGuarded<void>(
       () async {
         // Splash screen
-        runApp(
-          const Material(
-            child: Center(
-              child: RadialProgressIndicator(size: 256),
-            ),
-          ),
-        );
+        runApp(const _InitializationSpinner());
         try {
           // Logo and splash screen
           await $initializeApp();
@@ -36,3 +31,19 @@ void main() => runZonedGuarded<void>(
         },
       ),
     );
+
+class _InitializationSpinner extends StatelessWidget {
+  const _InitializationSpinner();
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: ui.window.platformBrightness == Brightness.dark
+          ? ThemeData.dark().primaryColor
+          : ThemeData.light().primaryColor,
+      child: const Center(
+        child: RadialProgressIndicator(size: 256),
+      ),
+    );
+  }
+}

@@ -3,9 +3,10 @@ import 'package:entity/entity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../../common/controller/change_notifier_selector.dart';
 import '../../../common/initialization/dependencies.dart';
+import '../../../common/widget/state_builder.dart';
 import '../controller/logs_controller.dart';
+import '../controller/logs_state.dart';
 
 /// {@template logs_scope}
 /// LogsScope widget.
@@ -55,13 +56,11 @@ class _LogsScopeState extends State<LogsScope> {
   }
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder<List<Log>>(
-        valueListenable: _controller.select<List<Log>>(
-          (controller) => controller.state.logs,
-        ),
-        builder: (context, logs, child) => _InheritedLogs(
+  Widget build(BuildContext context) => StateBuilder<LogsState>(
+        controller: _controller,
+        builder: (context, state) => _InheritedLogs(
           controller: _controller,
-          logs: logs,
+          logs: state.logs,
           child: widget.child,
         ),
       );

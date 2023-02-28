@@ -19,6 +19,7 @@ abstract class StateController<State extends Object> extends Controller implemen
   @nonVirtual
   void setState(State state) {
     _$state = state;
+    if (isDisposed) return;
     notifyListeners();
   }
 }

@@ -24,6 +24,7 @@ dependencies:
   collection: any
   async: any
   meta: any
+  stream_transform: ^2.1.0
 
   # Desktop
   #bitsdojo_window: ^0.1.5

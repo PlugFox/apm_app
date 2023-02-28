@@ -23,10 +23,13 @@ abstract class Controller with ChangeNotifier implements IController {
   @nonVirtual
   bool get isProcessing => _$processingCalls > 0;
   int _$processingCalls = 0;
+  bool get isDisposed => _$isDisposed;
+  bool _$isDisposed = false;
 
   @protected
   @mustCallSuper
   Future<void> handle(Future<void> Function() handler) async {
+    if (isDisposed) return;
     _$processingCalls++;
     notifyListeners();
     try {
@@ -43,6 +46,13 @@ abstract class Controller with ChangeNotifier implements IController {
       _$processingCalls--;
       notifyListeners();
     }
+  }
+
+  @override
+  @mustCallSuper
+  void dispose() {
+    _$isDisposed = true;
+    super.dispose();
   }
 
   @protected

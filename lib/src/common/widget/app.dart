@@ -23,7 +23,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) => MaterialApp(
         title: 'Application Performance Monitoring',
-        restorationScopeId: 'material_app',
+        //restorationScopeId: 'material_app',
         debugShowCheckedModeBanner: false,
         theme: ui.window.platformBrightness == Brightness.dark ? ThemeData.dark() : ThemeData.light(),
         themeMode: ThemeMode.system,
@@ -39,7 +39,6 @@ class _AppState extends State<App> {
           data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
           child: WindowScope(
             child: LogsScope(
-              // TODO(plugfox): Drawer
               child: child ?? const SizedBox.shrink(),
             ),
           ),

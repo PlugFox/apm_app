@@ -6,6 +6,10 @@ import '../model/logs_chunk.dart';
 import '../model/logs_filter.dart';
 
 abstract class ILogsLocalDataProvider {
+  /// Stream of logs changes
+  Stream<void> get onLogsChanged;
+
+  /// Fetch logs
   Future<LogsChunk> fetch({
     LogID? from,
     LogID? to,
@@ -18,6 +22,9 @@ class LogsLocalDataProviderDatabaseImpl implements ILogsLocalDataProvider {
   LogsLocalDataProviderDatabaseImpl({required db.Database database}) : _database = database;
 
   final db.Database _database;
+
+  @override
+  Stream<void> get onLogsChanged => _database.select(_database.log).watch();
 
   @override
   Future<LogsChunk> fetch({
@@ -37,6 +44,7 @@ class LogsLocalDataProviderDatabaseImpl implements ILogsLocalDataProvider {
             dateFrom: filter?.dateFrom,
             dateTo: filter?.dateTo,
           ))
+          ..orderBy([(tbl) => db.OrderingTerm(expression: tbl.id, mode: db.OrderingMode.desc)])
           ..limit(count))
         .get()
         .then<List<Log>>((list) => list.map(const LogDTO().fromDatabase).toList());
@@ -59,8 +67,8 @@ class LogsLocalDataProviderDatabaseImpl implements ILogsLocalDataProvider {
       (db.Log tbl) {
         db.Expression<bool>? predicate;
         void add(db.Expression<bool> exp) => predicate = (predicate != null) ? predicate! & exp : exp;
-        if (from != null) add(tbl.id.isBiggerThanValue(from));
-        if (to != null) add(tbl.id.isSmallerThanValue(to));
+        if (from != null) add(tbl.id.isSmallerThanValue(from));
+        if (to != null) add(tbl.id.isBiggerThanValue(to));
         if (projectId != null) add(tbl.projectId.equals(projectId));
         if (spanId != null) add(tbl.spanId.equals(spanId));
         if (name != null) add(tbl.name.equals(name));

@@ -49,6 +49,7 @@ class _ValueListenableView<Controller extends Listenable, Value> with ChangeNoti
   final Controller _controller;
   final ChangeNotifierSelector<Controller, Value> _selector;
   final ChangeNotifierFilter<Value>? _test;
+  bool _isDisposed = false;
 
   @override
   Value get value => hasListeners ? _$value : _selector(_controller);
@@ -56,6 +57,7 @@ class _ValueListenableView<Controller extends Listenable, Value> with ChangeNoti
   late Value _$value;
 
   void _update() {
+    if (_isDisposed) return;
     final newValue = _selector(_controller);
     if (identical(_$value, newValue)) return;
     if (!(_test?.call(_$value, newValue) ?? true)) return;
@@ -65,6 +67,7 @@ class _ValueListenableView<Controller extends Listenable, Value> with ChangeNoti
 
   @override
   void addListener(VoidCallback listener) {
+    if (_isDisposed) return;
     if (!hasListeners) {
       _$value = _selector(_controller);
       _controller.addListener(_update);
@@ -74,12 +77,14 @@ class _ValueListenableView<Controller extends Listenable, Value> with ChangeNoti
 
   @override
   void removeListener(VoidCallback listener) {
+    if (_isDisposed) return;
     super.removeListener(listener);
     if (!hasListeners) _controller.removeListener(_update);
   }
 
   @override
   void dispose() {
+    _isDisposed = true;
     _controller.removeListener(_update);
     super.dispose();
   }
