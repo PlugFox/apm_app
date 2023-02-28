@@ -2,8 +2,8 @@
 CREATE TABLE IF NOT EXISTS kv (
     -- req Key
     k TEXT NOT NULL PRIMARY KEY,
-    -- req Value (JSON Object)
-    v TEXT NOT NULL CHECK(length(data) > 2 AND json_valid(data)),
+    -- req Value (e.g. JSON object)
+    v TEXT NOT NULL, -- CHECK(length(data) > 2 AND json_valid(data)),
     -- req Created date (unixtime in seconds)
     meta_created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
     -- req Updated date (unixtime in seconds)

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:entity/entity.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/controller/change_notifier_selector.dart';
@@ -72,13 +71,16 @@ class _LogsListState extends State<_LogsList> {
               // TODO: Add pinned list
 
               // Main logs list
-              SliverFixedExtentList(
-                itemExtent: LogTile.height,
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => LogTile(log: Log.placeholder()),
-                  childCount: 10,
-                ),
-              ),
+              Builder(builder: (context) {
+                final logs = LogsScope.logsOf(context, listen: true);
+                return SliverFixedExtentList(
+                  itemExtent: LogTile.height,
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => LogTile(log: logs[index]),
+                    childCount: logs.length,
+                  ),
+                );
+              }),
 
               // Progress indicators
               if (controller.isProcessing)

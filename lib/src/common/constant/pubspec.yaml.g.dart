@@ -58,7 +58,7 @@ const List<String> pre = <String>[];
 const List<String> build = <String>[];
 
 /// Build date in Unix Time (in seconds)
-const int timestamp = 1677391214;
+const int timestamp = 1677586659;
 
 /// Name [name]
 const String name = r'app';
@@ -104,6 +104,9 @@ const Map<String, Object> dependencies = <String, Object>{
   },
   'server': <String, Object>{
     'path': r'package/server',
+  },
+  'entity': <String, Object>{
+    'path': r'package/entity',
   },
 };
 

@@ -25,6 +25,10 @@ class LogsScope extends StatefulWidget {
   static List<Log> logsOf(BuildContext context, {bool listen = true}) =>
       _InheritedLogs.maybeOf(context, listen: listen)?.logs ?? _notFoundInheritedWidgetOfExactType();
 
+  /// Returns the [Log] from closest [LogsScope] which encloses the given context.
+  static Log getById(BuildContext context, LogID id, {bool listen = true}) =>
+      _InheritedLogs.getById(context, id, listen: listen) ?? _notFoundInheritedWidgetOfExactType();
+
   static Never _notFoundInheritedWidgetOfExactType() => throw ArgumentError(
         'Out of scope, not found inherited widget '
             'a LogsScope of the exact type',

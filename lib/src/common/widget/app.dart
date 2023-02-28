@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import '../../feature/logs/widget/logs_scope.dart';
 import '../../feature/logs/widget/logs_screen.dart';
 import '../localization/localization.dart';
+import 'window_scope.dart';
 
 /// {@template app}
 /// App widget
@@ -36,9 +37,11 @@ class _AppState extends State<App> {
         home: const LogsScreen(),
         builder: (context, child) => MediaQuery(
           data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
-          child: LogsScope(
-            // TODO(plugfox): Drawer
-            child: child ?? const SizedBox.shrink(),
+          child: WindowScope(
+            child: LogsScope(
+              // TODO(plugfox): Drawer
+              child: child ?? const SizedBox.shrink(),
+            ),
           ),
         ),
       );

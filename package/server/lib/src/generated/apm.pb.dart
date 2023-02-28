@@ -10,7 +10,10 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class Log extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Log', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'apm'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Log',
+      package: const $pb.PackageName($core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'apm'),
+      createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'project')
     ..aOS(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'span')
     ..aOS(20, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'event')
@@ -18,10 +21,13 @@ class Log extends $pb.GeneratedMessage {
     ..aOS(31, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name')
     ..a<$core.int>(32, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'level', $pb.PbFieldType.O3)
     ..aOS(50, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'stack')
-    ..m<$core.String, $core.String>(100, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'tags', entryClassName: 'Log.TagsEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OS, packageName: const $pb.PackageName('apm'))
+    ..m<$core.String, $core.String>(100, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'tags',
+        entryClassName: 'Log.TagsEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OS,
+        packageName: const $pb.PackageName('apm'))
     ..pPS(200, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'breadcrumbs')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
   Log._() : super();
   factory Log({
@@ -65,18 +71,19 @@ class Log extends $pb.GeneratedMessage {
     }
     return _result;
   }
-  factory Log.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Log.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  factory Log.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory Log.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
   Log clone() => Log()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  Log copyWith(void Function(Log) updates) => super.copyWith((message) => updates(message as Log)) as Log; // ignore: deprecated_member_use
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  Log copyWith(void Function(Log) updates) =>
+      super.copyWith((message) => updates(message as Log)) as Log; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static Log create() => Log._();
@@ -89,7 +96,10 @@ class Log extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get project => $_getSZ(0);
   @$pb.TagNumber(1)
-  set project($core.String v) { $_setString(0, v); }
+  set project($core.String v) {
+    $_setString(0, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasProject() => $_has(0);
   @$pb.TagNumber(1)
@@ -98,7 +108,10 @@ class Log extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   $core.String get span => $_getSZ(1);
   @$pb.TagNumber(10)
-  set span($core.String v) { $_setString(1, v); }
+  set span($core.String v) {
+    $_setString(1, v);
+  }
+
   @$pb.TagNumber(10)
   $core.bool hasSpan() => $_has(1);
   @$pb.TagNumber(10)
@@ -107,7 +120,10 @@ class Log extends $pb.GeneratedMessage {
   @$pb.TagNumber(20)
   $core.String get event => $_getSZ(2);
   @$pb.TagNumber(20)
-  set event($core.String v) { $_setString(2, v); }
+  set event($core.String v) {
+    $_setString(2, v);
+  }
+
   @$pb.TagNumber(20)
   $core.bool hasEvent() => $_has(2);
   @$pb.TagNumber(20)
@@ -116,7 +132,10 @@ class Log extends $pb.GeneratedMessage {
   @$pb.TagNumber(30)
   $core.int get time => $_getIZ(3);
   @$pb.TagNumber(30)
-  set time($core.int v) { $_setSignedInt32(3, v); }
+  set time($core.int v) {
+    $_setSignedInt32(3, v);
+  }
+
   @$pb.TagNumber(30)
   $core.bool hasTime() => $_has(3);
   @$pb.TagNumber(30)
@@ -125,7 +144,10 @@ class Log extends $pb.GeneratedMessage {
   @$pb.TagNumber(31)
   $core.String get name => $_getSZ(4);
   @$pb.TagNumber(31)
-  set name($core.String v) { $_setString(4, v); }
+  set name($core.String v) {
+    $_setString(4, v);
+  }
+
   @$pb.TagNumber(31)
   $core.bool hasName() => $_has(4);
   @$pb.TagNumber(31)
@@ -134,7 +156,10 @@ class Log extends $pb.GeneratedMessage {
   @$pb.TagNumber(32)
   $core.int get level => $_getIZ(5);
   @$pb.TagNumber(32)
-  set level($core.int v) { $_setSignedInt32(5, v); }
+  set level($core.int v) {
+    $_setSignedInt32(5, v);
+  }
+
   @$pb.TagNumber(32)
   $core.bool hasLevel() => $_has(5);
   @$pb.TagNumber(32)
@@ -143,7 +168,10 @@ class Log extends $pb.GeneratedMessage {
   @$pb.TagNumber(50)
   $core.String get stack => $_getSZ(6);
   @$pb.TagNumber(50)
-  set stack($core.String v) { $_setString(6, v); }
+  set stack($core.String v) {
+    $_setString(6, v);
+  }
+
   @$pb.TagNumber(50)
   $core.bool hasStack() => $_has(6);
   @$pb.TagNumber(50)
@@ -157,13 +185,15 @@ class Log extends $pb.GeneratedMessage {
 }
 
 class Transaction extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Transaction', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'apm'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Transaction',
+      package: const $pb.PackageName($core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'apm'),
+      createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'project')
     ..aOS(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
     ..aOS(50, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'operation')
     ..aOS(100, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'description')
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
   Transaction._() : super();
   factory Transaction({
@@ -187,18 +217,19 @@ class Transaction extends $pb.GeneratedMessage {
     }
     return _result;
   }
-  factory Transaction.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Transaction.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  factory Transaction.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory Transaction.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
   Transaction clone() => Transaction()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  Transaction copyWith(void Function(Transaction) updates) => super.copyWith((message) => updates(message as Transaction)) as Transaction; // ignore: deprecated_member_use
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  Transaction copyWith(void Function(Transaction) updates) =>
+      super.copyWith((message) => updates(message as Transaction)) as Transaction; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static Transaction create() => Transaction._();
@@ -211,7 +242,10 @@ class Transaction extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.String get project => $_getSZ(0);
   @$pb.TagNumber(1)
-  set project($core.String v) { $_setString(0, v); }
+  set project($core.String v) {
+    $_setString(0, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasProject() => $_has(0);
   @$pb.TagNumber(1)
@@ -220,7 +254,10 @@ class Transaction extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   $core.String get id => $_getSZ(1);
   @$pb.TagNumber(10)
-  set id($core.String v) { $_setString(1, v); }
+  set id($core.String v) {
+    $_setString(1, v);
+  }
+
   @$pb.TagNumber(10)
   $core.bool hasId() => $_has(1);
   @$pb.TagNumber(10)
@@ -229,7 +266,10 @@ class Transaction extends $pb.GeneratedMessage {
   @$pb.TagNumber(50)
   $core.String get operation => $_getSZ(2);
   @$pb.TagNumber(50)
-  set operation($core.String v) { $_setString(2, v); }
+  set operation($core.String v) {
+    $_setString(2, v);
+  }
+
   @$pb.TagNumber(50)
   $core.bool hasOperation() => $_has(2);
   @$pb.TagNumber(50)
@@ -238,10 +278,12 @@ class Transaction extends $pb.GeneratedMessage {
   @$pb.TagNumber(100)
   $core.String get description => $_getSZ(3);
   @$pb.TagNumber(100)
-  set description($core.String v) { $_setString(3, v); }
+  set description($core.String v) {
+    $_setString(3, v);
+  }
+
   @$pb.TagNumber(100)
   $core.bool hasDescription() => $_has(3);
   @$pb.TagNumber(100)
   void clearDescription() => clearField(100);
 }
-

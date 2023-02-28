@@ -8,6 +8,7 @@ import 'package:server/server.dart' as srv;
 import '../util/error_util.dart';
 import 'dependencies.dart';
 import 'handler.dart';
+import 'platform/platform_initialization.dart';
 
 Future<void>? _$initializeApp;
 
@@ -27,6 +28,7 @@ FutureOr<void> $initializeApp({
             DeviceOrientation.portraitDown,
           ]); */
           await _catchExceptions();
+          await platformInitialization();
           await Dependencies.database.refresh();
           await _$startServer();
           /* Analytics.logAppOpen();
