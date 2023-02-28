@@ -71,11 +71,11 @@ class LogTile extends StatelessWidget {
                     Align(
                       alignment: const Alignment(1, .75),
                       child: SizedBox(
-                        width: 80,
+                        width: 72,
                         child: Text(
                           DateUtil.format(log.timestamp),
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          overflow: TextOverflow.clip,
                           textAlign: TextAlign.right,
                           style: theme.textTheme.labelSmall?.copyWith(height: 1, color: Colors.grey),
                         ),
