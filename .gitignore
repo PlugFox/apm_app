@@ -68,3 +68,6 @@ coverage/
 
 # Generated files
 lib/generated_plugin_registrant.dart
+
+# Screenshots
+integration_test/screenshots/
