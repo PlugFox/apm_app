@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:database/database.dart' as db;
+import 'package:database/database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:server/server.dart' as srv;
@@ -29,7 +29,7 @@ FutureOr<void> $initializeApp({
           ]); */
           await _catchExceptions();
           await platformInitialization();
-          await Dependencies.database.refresh();
+          await Dependencies.instance.database.refresh();
           await _$startServer();
           /* Analytics.logAppOpen();
           Analytics.logInitialized(elapsedMilliseconds: stopwatch.elapsedMilliseconds); */
@@ -83,8 +83,8 @@ Future<void> _catchExceptions() async {
   }
 }
 
-Future<void> _$startServer() => Dependencies.database.serializableConnection().then<void>(
-      (connection) => Dependencies.server.start(
+Future<void> _$startServer() => Dependencies.instance.database.serializableConnection().then<void>(
+      (connection) => Dependencies.instance.server.start(
         options: srv.ServerOptions(
           payload: connection,
           handler: $handler,

@@ -46,7 +46,7 @@ class LogsScope extends StatefulWidget {
 /// State for widget LogsScope.
 class _LogsScopeState extends State<LogsScope> {
   final ILogsController _controller = LogsController(
-    repository: Dependencies.logsRepository,
+    repository: Dependencies.instance.logsRepository,
   );
 
   @override

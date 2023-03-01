@@ -1,22 +1,23 @@
 import 'package:database/database.dart';
-import 'package:meta/meta.dart';
 import 'package:server/server.dart';
 
 import '../../feature/logs/data/logs_local_data_provider.dart';
 import '../../feature/logs/data/logs_repository.dart';
 
 /// Dependencies
-@sealed
-abstract class Dependencies {
-  Dependencies._();
+class Dependencies {
+  Dependencies._internal();
+  static final Dependencies _internalSingleton = Dependencies._internal();
+  static Dependencies get instance => _internalSingleton;
+  static Dependencies get I => _internalSingleton;
 
   /// Database
-  static final Database database = Database.lazy(logStatements: false, dropDatabase: false);
+  final Database database = Database.lazy(logStatements: false, dropDatabase: false);
 
   /// Server
-  static final Server server = Server();
+  final Server server = Server();
 
   /// Logs repository factory
-  static ILogsRepository get logsRepository =>
+  ILogsRepository get logsRepository =>
       LogsRepositoryImpl(localDataProvider: LogsLocalDataProviderDatabaseImpl(database: database));
 }

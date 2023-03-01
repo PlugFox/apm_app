@@ -2,6 +2,7 @@ import 'package:entity/entity.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/util/date_util.dart';
+import 'log_bottom_sheet.dart';
 
 /// {@template log_tile}
 /// LogTile widget.
@@ -41,7 +42,7 @@ class LogTile extends StatelessWidget {
     return Material(
       color: _logColors[log.level % _logColors.length],
       child: InkWell(
-        onTap: () {},
+        onTap: () => LogBottomSheet.show(context, log),
         child: SizedBox(
           height: height,
           child: Stack(
@@ -62,12 +63,13 @@ class LogTile extends StatelessWidget {
                     const SizedBox(width: 8),
                     // TODO(plugfox): Use mono font for events.
                     Expanded(
-                        child: Text(
-                      log.event,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.labelMedium?.copyWith(),
-                    )),
+                      child: Text(
+                        log.event,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelMedium?.copyWith(),
+                      ),
+                    ),
                     Align(
                       alignment: const Alignment(1, .75),
                       child: SizedBox(

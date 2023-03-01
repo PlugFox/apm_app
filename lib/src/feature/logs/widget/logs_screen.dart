@@ -92,13 +92,24 @@ class _LogsListState extends State<_LogsList> {
       builder: (context, state) => CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
-                title: const Text('Logs'),
+                title: const Text(
+                  'Events',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 pinned: MediaQuery.of(context).size.height > 600,
                 floating: true,
                 snap: true,
               ),
 
               // TODO: Add pinned list
+              /* SliverFixedExtentList(
+                itemExtent: LogTile.height,
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => LogTile(log: Log.placeholder()),
+                  childCount: 5,
+                ),
+              ), */
 
               // Main logs list
               const _LogsSliverList(),
