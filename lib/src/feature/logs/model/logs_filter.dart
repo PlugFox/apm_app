@@ -23,6 +23,25 @@ class LogsFilter {
   final DateTime? dateFrom;
   final DateTime? dateTo;
 
+  LogsFilter copyWith({
+    String? search,
+    ProjectID? projectId,
+    SpanID? spanId,
+    String? name,
+    int? level,
+    DateTime? dateFrom,
+    DateTime? dateTo,
+  }) =>
+      LogsFilter(
+        search: search ?? this.search,
+        projectId: projectId ?? this.projectId,
+        spanId: spanId ?? this.spanId,
+        name: name ?? this.name,
+        level: level ?? this.level,
+        dateFrom: dateFrom ?? this.dateFrom,
+        dateTo: dateTo ?? this.dateTo,
+      );
+
   @override
   int get hashCode => Object.hashAll([
         search,

@@ -9,6 +9,7 @@ import '../controller/logs_controller.dart';
 import '../controller/logs_state.dart';
 import 'log_tile.dart';
 import 'logs_scope.dart';
+import 'logs_search_bar.dart';
 
 /// {@template logs_screen}
 /// LogsScreen widget.
@@ -97,6 +98,8 @@ class _LogsListState extends State<_LogsList> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
+                toolbarHeight: kToolbarHeight,
+                bottom: const LogsSearchBar(),
                 pinned: MediaQuery.of(context).size.height > 600,
                 floating: true,
                 snap: true,

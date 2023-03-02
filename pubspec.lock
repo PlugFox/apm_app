@@ -475,7 +475,7 @@ packages:
     source: hosted
     version: "1.0.4"
   multiline:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: multiline
       sha256: "595fba7b1ce58127a0f2c7ff6621a4c62a11264e52a391803c6613b431bbc1e2"

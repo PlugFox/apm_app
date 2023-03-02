@@ -26,6 +26,7 @@ dependencies:
   meta: any
   path: any
   stream_transform: ^2.1.0
+  multiline: any
 
   # Desktop
   #bitsdojo_window: ^0.1.5

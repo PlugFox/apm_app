@@ -22,6 +22,9 @@ abstract class ILogsController extends IStateController<LogsState> {
 
   /// Set filter
   Future<void> setFilter(LogsFilter filter);
+
+  /// Change filter
+  Future<void> changeFilter(LogsFilter Function(LogsFilter filter) change);
 }
 
 abstract class $LogsControllerBase extends StateController<LogsState> implements ILogsController {
@@ -109,4 +112,7 @@ mixin _LogsSetFilterMixin on $LogsControllerBase {
     setState(LogsState.loading(logs: const <Log>[], endOfList: false, filter: filter));
     return paginate();
   }
+
+  @override
+  Future<void> changeFilter(LogsFilter Function(LogsFilter filter) change) => setFilter(change(state.filter));
 }
