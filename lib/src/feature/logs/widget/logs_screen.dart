@@ -98,6 +98,7 @@ class _LogsListState extends State<_LogsList> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
+                backgroundColor: Theme.of(context).primaryColor,
                 toolbarHeight: kToolbarHeight,
                 bottom: const LogsSearchBar(),
                 pinned: MediaQuery.of(context).size.height > 600,

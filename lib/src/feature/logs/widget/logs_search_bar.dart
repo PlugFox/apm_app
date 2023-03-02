@@ -48,25 +48,21 @@ class _LogsSearchBarState extends State<LogsSearchBar> {
     super.dispose();
   }
 
+  // TODO(plugfox): Expand search bar when focused and show recent searches and filters.
+
   @override
   Widget build(BuildContext context) => SizedBox.fromSize(
         size: LogsSearchBar.size,
         child: Material(
           color: Theme.of(context).primaryColor,
           elevation: 4,
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: _LogsSearchTextField(
-                    isProcessing: _isProcessing,
-                    textSearchFocusNode: _textSearchFocusNode,
-                    textSearchController: _textSearchController,
-                  ),
-                ),
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: _LogsSearchTextField(
+              isProcessing: _isProcessing,
+              textSearchFocusNode: _textSearchFocusNode,
+              textSearchController: _textSearchController,
+            ),
           ),
         ),
       );
@@ -132,7 +128,7 @@ class _LogsSearchTextField extends StatelessWidget {
               focusedBorder: _$border,
               focusedErrorBorder: _$errorBorder,
               disabledBorder: _$disabledBorder,
-              hintText: 'Search',
+              hintText: 'Search by event, tag, project, etc...',
               prefixIcon: const Opacity(opacity: .5, child: Icon(Icons.search)),
               contentPadding: EdgeInsets.zero,
               suffixIconConstraints: BoxConstraints.tight(const Size.square(48)),
