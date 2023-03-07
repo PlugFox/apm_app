@@ -1881,6 +1881,292 @@ class BreadcrumbCompanion extends UpdateCompanion<BreadcrumbData> {
   }
 }
 
+class Pinned extends Table with TableInfo<Pinned, PinnedData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Pinned(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL PRIMARY KEY');
+  @override
+  List<GeneratedColumn> get $columns => [id];
+  @override
+  String get aliasedName => _alias ?? 'pinned';
+  @override
+  String get actualTableName => 'pinned';
+  @override
+  VerificationContext validateIntegrity(Insertable<PinnedData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PinnedData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PinnedData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+    );
+  }
+
+  @override
+  Pinned createAlias(String alias) {
+    return Pinned(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+  @override
+  List<String> get customConstraints => const [
+        'FOREIGN KEY(id)REFERENCES log(id)ON UPDATE CASCADE ON DELETE CASCADE'
+      ];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class PinnedData extends DataClass implements Insertable<PinnedData> {
+  final int id;
+  const PinnedData({required this.id});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    return map;
+  }
+
+  PinnedCompanion toCompanion(bool nullToAbsent) {
+    return PinnedCompanion(
+      id: Value(id),
+    );
+  }
+
+  factory PinnedData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PinnedData(
+      id: serializer.fromJson<int>(json['id']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+    };
+  }
+
+  PinnedData copyWith({int? id}) => PinnedData(
+        id: id ?? this.id,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('PinnedData(')
+          ..write('id: $id')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || (other is PinnedData && other.id == this.id);
+}
+
+class PinnedCompanion extends UpdateCompanion<PinnedData> {
+  final Value<int> id;
+  const PinnedCompanion({
+    this.id = const Value.absent(),
+  });
+  PinnedCompanion.insert({
+    this.id = const Value.absent(),
+  });
+  static Insertable<PinnedData> custom({
+    Expression<int>? id,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+    });
+  }
+
+  PinnedCompanion copyWith({Value<int>? id}) {
+    return PinnedCompanion(
+      id: id ?? this.id,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PinnedCompanion(')
+          ..write('id: $id')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class Starred extends Table with TableInfo<Starred, StarredData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Starred(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL PRIMARY KEY');
+  @override
+  List<GeneratedColumn> get $columns => [id];
+  @override
+  String get aliasedName => _alias ?? 'starred';
+  @override
+  String get actualTableName => 'starred';
+  @override
+  VerificationContext validateIntegrity(Insertable<StarredData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  StarredData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return StarredData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+    );
+  }
+
+  @override
+  Starred createAlias(String alias) {
+    return Starred(attachedDatabase, alias);
+  }
+
+  @override
+  bool get isStrict => true;
+  @override
+  List<String> get customConstraints => const [
+        'FOREIGN KEY(id)REFERENCES log(id)ON UPDATE CASCADE ON DELETE CASCADE'
+      ];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class StarredData extends DataClass implements Insertable<StarredData> {
+  final int id;
+  const StarredData({required this.id});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    return map;
+  }
+
+  StarredCompanion toCompanion(bool nullToAbsent) {
+    return StarredCompanion(
+      id: Value(id),
+    );
+  }
+
+  factory StarredData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return StarredData(
+      id: serializer.fromJson<int>(json['id']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+    };
+  }
+
+  StarredData copyWith({int? id}) => StarredData(
+        id: id ?? this.id,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('StarredData(')
+          ..write('id: $id')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || (other is StarredData && other.id == this.id);
+}
+
+class StarredCompanion extends UpdateCompanion<StarredData> {
+  final Value<int> id;
+  const StarredCompanion({
+    this.id = const Value.absent(),
+  });
+  StarredCompanion.insert({
+    this.id = const Value.absent(),
+  });
+  static Insertable<StarredData> custom({
+    Expression<int>? id,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+    });
+  }
+
+  StarredCompanion copyWith({Value<int>? id}) {
+    return StarredCompanion(
+      id: id ?? this.id,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StarredCompanion(')
+          ..write('id: $id')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class Search extends Table with TableInfo<Search, SearchData> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -2459,6 +2745,8 @@ abstract class _$Database extends GeneratedDatabase {
   late final Breadcrumb breadcrumb = Breadcrumb(this);
   late final Index breadcrumbLogIdIdx = Index('breadcrumb_log_id_idx',
       'CREATE INDEX IF NOT EXISTS breadcrumb_log_id_idx ON breadcrumb (log_id)');
+  late final Pinned pinned = Pinned(this);
+  late final Starred starred = Starred(this);
   late final Search search = Search(this);
   late final Index searchSuffixIdx = Index('search_suffix_idx',
       'CREATE INDEX IF NOT EXISTS search_suffix_idx ON search (suffix)');
@@ -2510,6 +2798,8 @@ abstract class _$Database extends GeneratedDatabase {
         tagVIdx,
         breadcrumb,
         breadcrumbLogIdIdx,
+        pinned,
+        starred,
         search,
         searchSuffixIdx,
         searchLogIdIdx,
@@ -2625,6 +2915,34 @@ abstract class _$Database extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.update),
             result: [
               TableUpdate('breadcrumb', kind: UpdateKind.update),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('log',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('pinned', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('log',
+                limitUpdateKind: UpdateKind.update),
+            result: [
+              TableUpdate('pinned', kind: UpdateKind.update),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('log',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('starred', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('log',
+                limitUpdateKind: UpdateKind.update),
+            result: [
+              TableUpdate('starred', kind: UpdateKind.update),
             ],
           ),
           WritePropagation(

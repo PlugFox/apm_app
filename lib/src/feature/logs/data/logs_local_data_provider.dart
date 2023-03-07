@@ -75,7 +75,8 @@ class LogsLocalDataProviderDatabaseImpl implements ILogsLocalDataProvider {
               projectId: filter?.projectId,
               spanId: filter?.spanId,
               name: filter?.name,
-              level: filter?.level,
+              levelFrom: filter?.levelFrom,
+              levelTo: filter?.levelTo,
               dateFrom: filter?.dateFrom,
               dateTo: filter?.dateTo,
             ))
@@ -101,7 +102,8 @@ class LogsLocalDataProviderDatabaseImpl implements ILogsLocalDataProvider {
     ProjectID? projectId,
     SpanID? spanId,
     String? name,
-    int? level,
+    int? levelFrom,
+    int? levelTo,
     DateTime? dateFrom,
     DateTime? dateTo,
   }) =>
@@ -111,20 +113,28 @@ class LogsLocalDataProviderDatabaseImpl implements ILogsLocalDataProvider {
         if (ids != null) add(tbl.id.isIn(ids));
         if (from != null) add(tbl.id.isSmallerThanValue(from));
         if (to != null) add(tbl.id.isBiggerThanValue(to));
+
         if (projectId != null) add(tbl.projectId.equals(projectId));
         if (spanId != null) add(tbl.spanId.equals(spanId));
-        if (name != null) add(tbl.name.equals(name));
-        if (level != null) add(tbl.level.equals(level));
 
         int? seconds(DateTime? dt) => dt != null ? dt.millisecondsSinceEpoch ~/ 1000 : null;
-        final timeFrom = seconds(dateFrom);
-        final timeTo = seconds(dateTo);
+        final timeFrom = seconds(dateFrom), timeTo = seconds(dateTo);
         if (timeFrom != null && timeTo != null) {
           add(tbl.time.isBetweenValues(timeFrom, timeTo));
         } else if (timeFrom != null) {
-          add(tbl.time.isBiggerThanValue(timeFrom));
+          add(tbl.time.isBiggerOrEqualValue(timeFrom));
         } else if (timeTo != null) {
-          add(tbl.time.isSmallerThanValue(timeTo));
+          add(tbl.time.isSmallerOrEqualValue(timeTo));
+        }
+
+        if (name != null) add(tbl.name.equals(name));
+
+        if (levelFrom != null && levelTo != null) {
+          add(tbl.level.isBetweenValues(levelFrom, levelTo));
+        } else if (levelFrom != null) {
+          add(tbl.level.isBiggerOrEqualValue(levelFrom));
+        } else if (levelTo != null) {
+          add(tbl.level.isSmallerOrEqualValue(levelTo));
         }
 
         return predicate ?? const db.Constant(true);

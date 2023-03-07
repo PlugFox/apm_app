@@ -170,10 +170,11 @@ class DatabaseMigrationStrategy implements MigrationStrategy {
   /// makes it a suitable place to populate data after the database has been
   /// created or set sqlite `PRAGMAS` that you need.
   @override
-  OnBeforeOpen get beforeOpen => (details) => Future<void>.value();
+  OnBeforeOpen get beforeOpen => (details) async {};
 
   /// https://moor.simonbinder.eu/docs/advanced-features/migrations/
   static Future<void> _update(Database db, Migrator m, int from, int to) async {
+    m.createAll();
     if (from >= to) return;
   }
 }

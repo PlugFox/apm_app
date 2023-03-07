@@ -40,7 +40,7 @@ class LogTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Material(
-      color: _logColors[log.level % _logColors.length],
+      color: _logColors[(log.level ~/ 100) % _logColors.length],
       child: InkWell(
         onTap: () => LogBottomSheet.show(context, log),
         child: SizedBox(

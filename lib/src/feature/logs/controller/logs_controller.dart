@@ -109,6 +109,7 @@ mixin _LogsPaginationMixin on $LogsControllerBase {
 mixin _LogsSetFilterMixin on $LogsControllerBase {
   @override
   Future<void> setFilter(LogsFilter filter) {
+    if (filter == state.filter) return SynchronousFuture<void>(null); // Already filtering with this filter
     setState(LogsState.loading(logs: const <Log>[], endOfList: false, filter: filter));
     return paginate();
   }

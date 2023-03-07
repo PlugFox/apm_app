@@ -168,6 +168,30 @@ CREATE TABLE IF NOT EXISTS breadcrumb (
 -- Indexes
 CREATE INDEX IF NOT EXISTS breadcrumb_log_id_idx ON breadcrumb (log_id);
 
+-- Pinned table
+CREATE TABLE IF NOT EXISTS pinned (
+    -- req Unique identifier of the log
+    id INTEGER NOT NULL PRIMARY KEY,
+
+    -- Foreign keys
+    FOREIGN KEY (id)
+        REFERENCES log (id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
+) STRICT;
+
+-- Favorite table
+CREATE TABLE IF NOT EXISTS starred (
+    -- req Unique identifier of the log
+    id INTEGER NOT NULL PRIMARY KEY,
+
+    -- Foreign keys
+    FOREIGN KEY (id)
+        REFERENCES log (id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
+) STRICT;
+
 /* SEARCH SECTION */
 
 -- Search table

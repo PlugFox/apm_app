@@ -8,7 +8,8 @@ class LogsFilter {
     this.projectId,
     this.spanId,
     this.name,
-    this.level,
+    this.levelFrom,
+    this.levelTo,
     this.dateFrom,
     this.dateTo,
   });
@@ -19,16 +20,20 @@ class LogsFilter {
   final ProjectID? projectId;
   final SpanID? spanId;
   final String? name;
-  final int? level;
-  final DateTime? dateFrom;
-  final DateTime? dateTo;
+
+  /// Level range (inclusive)
+  final int? levelFrom, levelTo;
+
+  /// Date range (inclusive)
+  final DateTime? dateFrom, dateTo;
 
   LogsFilter copyWith({
     String? search,
     ProjectID? projectId,
     SpanID? spanId,
     String? name,
-    int? level,
+    int? levelFrom,
+    int? levelTo,
     DateTime? dateFrom,
     DateTime? dateTo,
   }) =>
@@ -37,9 +42,32 @@ class LogsFilter {
         projectId: projectId ?? this.projectId,
         spanId: spanId ?? this.spanId,
         name: name ?? this.name,
-        level: level ?? this.level,
+        levelFrom: levelFrom ?? this.levelFrom,
+        levelTo: levelTo ?? this.levelTo,
         dateFrom: dateFrom ?? this.dateFrom,
         dateTo: dateTo ?? this.dateTo,
+      );
+
+  LogsFilter clearLevelRange() => LogsFilter(
+        search: search,
+        projectId: projectId,
+        spanId: spanId,
+        name: name,
+        levelFrom: null,
+        levelTo: null,
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+      );
+
+  LogsFilter clearDateRange() => LogsFilter(
+        search: search,
+        projectId: projectId,
+        spanId: spanId,
+        name: name,
+        levelFrom: levelFrom,
+        levelTo: levelTo,
+        dateFrom: null,
+        dateTo: null,
       );
 
   @override
@@ -48,7 +76,8 @@ class LogsFilter {
         projectId,
         spanId,
         name,
-        level,
+        levelFrom,
+        levelTo,
         dateFrom,
         dateTo,
       ]);
@@ -62,7 +91,8 @@ class LogsFilter {
           projectId == other.projectId &&
           spanId == other.spanId &&
           name == other.name &&
-          level == other.level &&
+          levelFrom == other.levelFrom &&
+          levelTo == other.levelTo &&
           dateFrom == other.dateFrom &&
           dateTo == other.dateTo;
 }

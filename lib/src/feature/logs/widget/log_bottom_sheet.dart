@@ -1,6 +1,8 @@
 import 'package:entity/entity.dart';
 import 'package:flutter/material.dart';
 
+import 'positioned_draggable_handle.dart';
+
 /// {@template log_bottom_sheet}
 /// LogBottomSheet widget.
 /// {@endtemplate}
@@ -55,38 +57,8 @@ class LogBottomSheet extends StatelessWidget {
               ),
             ),
           ),
-          const _PositionedDraggableHandle(),
+          const PositionedDraggableHandle(),
         ],
-      );
-}
-
-class _LogBottomSheetBody extends StatelessWidget {
-  const _LogBottomSheetBody({required this.log});
-
-  final Log log;
-
-  @override
-  Widget build(BuildContext context) => SliverList(
-        delegate: SliverChildListDelegate(
-          <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                log.event,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-            for (var i = 0; i < 100; i++)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: Text(
-                  log.event,
-                  //log.stackTrace ?? '',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ),
-          ],
-        ),
       );
 }
 
@@ -140,24 +112,32 @@ class _LogBottomSheetAppBar extends StatelessWidget {
       );
 }
 
-class _PositionedDraggableHandle extends StatelessWidget {
-  const _PositionedDraggableHandle();
+class _LogBottomSheetBody extends StatelessWidget {
+  const _LogBottomSheetBody({required this.log});
+
+  final Log log;
 
   @override
-  Widget build(BuildContext context) => Positioned(
-        left: 0,
-        right: 0,
-        top: 8,
-        height: 4,
-        child: Center(
-          child: Container(
-            width: 32,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Theme.of(context).dividerColor,
-              borderRadius: BorderRadius.circular(2),
+  Widget build(BuildContext context) => SliverList(
+        delegate: SliverChildListDelegate(
+          <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                log.event,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
             ),
-          ),
+            for (var i = 0; i < 100; i++)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: Text(
+                  log.event,
+                  //log.stackTrace ?? '',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+          ],
         ),
       );
 }
