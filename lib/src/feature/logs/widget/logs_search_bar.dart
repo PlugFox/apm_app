@@ -434,7 +434,8 @@ class _SearchBottomSheetBodyState extends State<_SearchBottomSheetBody> {
                   if (range == null) return;
                   widget.filter.value = widget.filter.value.copyWith(
                     dateFrom: range.start,
-                    dateTo: range.end,
+                    dateTo: DateTime(range.end.year, range.end.month, range.end.day + 1)
+                        .subtract(const Duration(microseconds: 1)),
                   );
                 }),
                 label: Text(
